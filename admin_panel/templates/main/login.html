@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<title></title>
+</head>
+<body>
+	<form onsubmit="log(this); return false;">
+		{% csrf_token %}
+		<input type="text" name="login"> логин
+		<input type="password" name="password"> pass
+		<input type="submit" name="">
+	</form>
+
+<script type="text/javascript">
+	function log(el) {
+		$.ajax({
+			url: '/admin-panel/login-handler/',
+			type: 'post',
+			data: $(el).serialize(),
+			dataType: 'html',
+			success: function(data){
+                    const json = data;
+                    var response = JSON.parse(json);
+                    if (response.verdict == '200'){
+                    	window.location.href = '/admin-panel/';
+                    }}
+		})
+	}
+</script>
+
+</body>
+</html>
