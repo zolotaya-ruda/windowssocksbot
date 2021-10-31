@@ -10,7 +10,9 @@ class AdminPanel:
         return render(request, 'main/login.html')
 
     def get_main_page(self, request):
-        return render(request, 'main/main.html')
+        if request.user.is_superuser:
+            return render(request, 'main/main.html', {'c': [20, 20, 20, 20, 20]})
+        return HttpResponse('недостачно прав для просмотра ')
 
 
 class Handlers:

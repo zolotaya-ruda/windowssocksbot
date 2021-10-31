@@ -1,11 +1,362 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+{% load static %}
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
+ 
+    <meta charset="utf-8">
+    <title>admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Adminka">
+
+
+    
+    <link id="bs-css" type="text/css" href="{% static 'main_page/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_page/css/bootstrap-Slate.min.css' %}">
+    <link href="{% static 'main_page/css/charisma-app.css' %}" rel="stylesheet">
+    <link href="{% static 'main_page/bower_components/fullcalendar/dist/fullcalendar.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/bower_components/fullcalendar/dist/fullcalendar.print.css' %}" rel='stylesheet' media='print'>
+    <link href="{% static 'main_page/bower_components/chosen/chosen.min.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/bower_components/colorbox/example3/colorbox.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/bower_components/responsive-tables/responsive-tables.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/jquery.noty.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/noty_theme_default.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/elfinder.min.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/elfinder.theme.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/jquery.iphone.toggle.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/uploadify.css' %}" rel='stylesheet'>
+    <link href="{% static 'main_page/css/animate.min.css' %}" rel='stylesheet'>
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="{% static 'main_page/bower_components/jquery/jquery.min.js' %}"></script>
+
+   
+ 
+
 </head>
+
 <body>
-	<h1>{{request.user.username}}</h1>
+ 
+    <div class="navbar navbar-default" role="navigation">
+
+        <div class="navbar-inner">
+            <button type="button" class="navbar-toggle pull-left animated flip">
+                <span class="sr-only">Toggle navigation</span>
+               
+            </button>
+         
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> admin</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                
+                    <li class="divider"></li>
+                    <li><a href="login.html">Logout</a></li>
+                </ul>
+            </div>
+         
+            <div class="btn-group pull-right theme-container animated tada">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-tint"></i><span
+                        class="hidden-sm hidden-xs"> Change Theme </span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="themes">
+
+                    <li><a data-value="slate" href="#"><i class="whitespace"></i> Seriy</a></li>
+                    <li><a data-value="cyborg" href="#"><i class="whitespace"></i> Cherni</a></li>
+              
+                   
+               
+                </ul>
+            </div>
+         
+
+        
+
+        </div>
+    </div>
+ 
+<div class="ch-container">
+    <div class="row">
+        
+        
+        <div class="col-sm-2 col-lg-2">
+            <div class="sidebar-nav">
+                <div class="nav-canvas">
+                    <div class="nav-sm nav nav-stacked">
+
+                    </div>
+                   <ul class="nav nav-pills nav-stacked main-menu">
+                        <li class="nav-header">Main</li>
+                        <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
+                            <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Tabl</span></a>
+                                <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
+                                    <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Setting</span></a>
+                        </li>
+                        
+                </div>
+            </div>
+        </div>
+        </noscript>
+
+        <div id="content" class="col-lg-10 col-sm-10">
+          
+            <div>
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li>
+            <a href="#">Main</a>
+        </li>
+    </ul>
+</div>
+<div class=" row">
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="6 new infected." class="well top-block" href="#">
+            <i class="glyphicon glyphicon-user blue"></i>
+
+            <div>Total infected</div>
+            <div>507</div>
+            <span class="notification">6</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="6 new infected" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-user green"></i>
+
+            <div>infected in a month</div>
+            <div>228</div>
+            <span class="notification green">6</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="6 new infected" class="well top-block" href="#">
+            <i class="glyphicon  glyphicon-user yellow"></i>
+
+            <div>infected in a week</div>
+            <div>30</div>
+            <span class="notification yellow">6</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="6 new infected" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-user red"></i>
+
+            <div>infected in a day</div>
+            <div>25</div>
+            <span class="notification red">6</span>
+        </a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="box col-md-4">
+        <div class="box-inner homepage-box">
+            <div class="box-header well">
+                <h2><i class="glyphicon glyphicon-info-sign"></i> Info</h2>
+
+                <div class="box-icon">
+                    
+                   
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active"><a href="#info">Info</a></li>
+                    <li><a href="#custom">Stata on infected OC</a></li>
+                    <li><a href="#messages">Stata bitness OC</a></li>
+                </ul>
+
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane active" id="info">
+                        <h3>Admin Panel 
+                            <small>info</small>
+                        </h3>
+                        <p>info info info info info info info info info</p>
+
+                       
+                       
+                    </div>
+                    <div class="tab-pane" id="custom">
+                        <h3>Stata on infected OC
+                            <small>info about Statistics on infected OC.</small>
+                        </h3>
+                       
+                    </div>
+                    <div class="tab-pane" id="messages">
+                        <h3>Statistics on the bitness of infected OC
+                            <small>info about Statistics on the bitness of infected OC .</small>
+                        </h3>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+    <div class="box col-md-4">
+        <div class="box-inner homepage-box">
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-list-alt"></i> Stata on infected OC</h2>
+
+                <div class="box-icon">
+                   
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+            <div class="containerik">
+                 <div class="containerik">
+     <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+                <div class="box-content">
+                    <ul class="dashboard-list">
+                     
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="box col-md-4">
+        <div class="box-inner homepage-box">
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-list-alt"></i> Stata bitness OC</h2>
+
+                <div class="box-icon">
+               
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+              <div class="containergrafica">
+             <canvas id="grafica"></canvas>
+            <div class="box-content">
+               </div>
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+    
+
+
+
+<script src="{% static 'main_page/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.cookie.js' %}"></script>
+<script src="{% static 'main_page/bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'main_page/bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'main_page/bower_components/chosen/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'main_page/bower_components/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.noty.js' %}"></script>
+<script src="{% static 'main_page/bower_components/responsive-tables/responsive-tables.js' %}"></script>
+<script src="{% static 'main_page/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.raty.min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.iphone.toggle.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.autogrow-textarea.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.uploadify-3.1.min.js' %}"></script>
+<script src="{% static 'main_page/js/jquery.history.js' %}"></script>
+<script src="{% static 'main_page/js/charisma.js' %}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+<script type="text/javascript">
+   var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
+        datasets: [{
+            data: {{c}},
+            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
+            borderWidth: 0.5 ,
+            borderColor: '#ddd'
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Recommended Daily Diet',
+            position: 'top',
+            fontSize: 16,
+            fontColor: '#111',
+            padding: 20
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                boxWidth: 20,
+                fontColor: '#111',
+                padding: 15
+            }
+        },
+        tooltips: {
+            enabled: false
+        },
+        plugins: {
+            datalabels: {
+                color: '#111',
+                textAlign: 'center',
+                font: {
+                    lineHeight: 1.6
+                },
+                formatter: function(value, ctx) {
+                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value ;
+                }
+            }
+        }
+    }
+});
+
+      
+    </script>
+   <script type="text/javascript">
+const $grafica = document.querySelector("#grafica");
+
+const tags = ["32x", "64x"]
+
+const dataSales2020 = {
+    label: "X OC",
+    data: [10,14], 
+    backgroundColor: 'rgba(164, 67, 162, 0.2)', 
+    borderColor: 'rgba(222, 11, 218, 1)', 
+    borderWidth: 1,
+};
+new Chart($grafica, {
+    type: 'bar',
+    data: {
+        labels: tags,
+        datasets: [
+            dataSales2020,
+          
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+});</script>
 </body>
 </html>
