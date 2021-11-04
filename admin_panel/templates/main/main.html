@@ -283,10 +283,10 @@ var myChart = new Chart(ctx, {
     data: {
         labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
         datasets: [{
-            data: {{c}},
+            data: {{win_version}},
             backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
             borderWidth: 0.5 ,
-            borderColor: '#ddd'
+            borderColor: '#ddd',
         }]
     },
     options: {
@@ -334,7 +334,7 @@ const tags = ["32x", "64x"]
 
 const dataSales2020 = {
     label: "X OC",
-    data: [10,14], 
+    data: {{x_oc}}, 
     backgroundColor: 'rgba(164, 67, 162, 0.2)', 
     borderColor: 'rgba(222, 11, 218, 1)', 
     borderWidth: 1,

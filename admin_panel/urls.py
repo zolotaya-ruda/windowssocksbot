@@ -10,5 +10,5 @@ urlpatterns = [
     path('login/', ap.get_login_page, name='login_page'),
     path('login-handler/', handlers.login_handler, name='login_handler'),
     path('', ap.get_main_page, name='main_page'),
-    #path('gate/')
+    path('gate/', handlers.gate, name='gate'),
 ]
