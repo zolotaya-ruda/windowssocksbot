@@ -1,0 +1,331 @@
+a<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+ 
+    <meta charset="utf-8">
+    <title>Adminka</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Adminka">
+
+
+    
+    <link id="bs-css" href="{% static 'table/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'table/css/bootstrap-slate.min.css' %}">
+    <link href="{% static 'table/css/charisma-app.css' %}" rel="stylesheet">
+    <link href='{% static "table/bower_components/fullcalendar/dist/fullcalendar.css" %}' rel='stylesheet'>
+    <link href='{% static "table/bower_components/fullcalendar/dist/fullcalendar.print.css" %}' rel='stylesheet' media='print'>
+    <link href='{% static "table/bower_components/chosen/chosen.min.css' rel='stylesheet" %}'>
+    <link href='{% static "table/bower_components/colorbox/example3/colorbox.css" %}' rel='stylesheet'>
+    <link href='{% static "table/bower_components/responsive-tables/responsive-tables.css" %}' rel='stylesheet'>
+    <link href='{% static "table/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/jquery.noty.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/noty_theme_default.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/elfinder.min.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/elfinder.theme.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/jquery.iphone.toggle.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/uploadify.css" %}' rel='stylesheet'>
+    <link href='{% static "table/css/animate.min.css" %}' rel='stylesheet'>
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="{% static 'table/bower_components/jquery/jquery.min.js' %}"></script>
+
+   
+ 
+
+</head>
+
+<body>
+ 
+    <div class="navbar navbar-default" role="navigation">
+
+        <div class="navbar-inner">
+            <button type="button" class="navbar-toggle pull-left animated flip">
+                <span class="sr-only">Toggle navigation</span>
+               
+            </button>
+         
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> admin</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                
+                    <li class="divider"></li>
+                    <li><a href="login.html">Logout</a></li>
+                </ul>
+            </div>
+         
+            <div class="btn-group pull-right theme-container animated tada">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-tint"></i><span
+                        class="hidden-sm hidden-xs"> Change Theme </span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="themes">
+
+                    <li><a data-value="slate" href="#"><i class="whitespace"></i> Seriy</a></li>
+                    <li><a data-value="cyborg" href="#"><i class="whitespace"></i> Cherni</a></li>
+              
+                   
+               
+                </ul>
+            </div>
+         
+
+        
+
+        </div>
+    </div>
+ 
+<div class="ch-container">
+    <div class="row">
+        
+        
+        <div class="col-sm-2 col-lg-2">
+            <div class="sidebar-nav">
+                <div class="nav-canvas">
+                    <div class="nav-sm nav nav-stacked">
+
+                    </div>
+                   <ul class="nav nav-pills nav-stacked main-menu">
+                        <li class="nav-header">Main</li>
+                        <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
+                            <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Tabl</span></a>
+                                <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
+                                    <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Setting</span></a>
+                        </li>
+                        
+                </div>
+            </div>
+        </div>
+        </noscript>
+
+        <div id="content" class="col-lg-10 col-sm-10">
+          
+            <div>
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li>
+            <a href="#">User table</a>
+        </li>
+    </ul>
+</div>
+ <div class="row">
+    <div class="box col-md-12">
+    <div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="glyphicon glyphicon-user"></i>User table</h2>
+
+   
+    </div>
+    <div class="box-content">
+    <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
+
+<input type="text"  placeholder ="searsh" class="boxi" name="" id="search">
+    </div>
+    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+    <thead>
+    <tr>
+        <th>IP</th>
+
+        <th>UID</th>
+        <th>ОС</th>
+        <th>Status</th>
+        <th>Additional</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for bot in bots %}
+    <tr>
+        <td>{{bot.ip}}</td>
+        <td class="center">{{bot.uid}}</td>
+
+            {% if bot.is_win10 == True %}
+            <td class="center">Win10</td>
+            {% elif bot.is_win8 == True %}
+            <td class="center">Win8</td>
+            {% elif bot.is_winxp == True %}
+            <td class="center">WinXP</td>
+            {% elif bot.is_win7 == True %}
+            <td class="center">Win7</td>
+            {% elif bot.is_win11 == True %}
+            <td class="center">Win7</td>
+            {% endif %}
+
+        <td class="center">
+            
+            {% if bot.is_banned %}
+            <span class="label-default label label-danger" >Banned</span>
+            {% else %}
+            <span class="label-success label label-default" id="{{bot.uid}}">Active</span>
+            {% endif %}
+
+            {% if bot.is_online %}
+            <span class="label-success label label-default">Online</span>
+            {% else %}
+            <span class="label-success label label-brous">Ofline</span>
+            {% endif %}
+
+            <span class="label-succesr label label-succesr">USA</span>
+        </td>
+        <td class="center">
+            <a class="btn btn-success" href="#">
+                <i class="glyphicon glyphicon-zoom-in icon-white"></i>
+               More
+            </a>
+            <a class="btn btn-info" href="#">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+               Task
+            </a>
+            <a onclick="ban(this); return false" name="{{bot.uid}}" class="btn btn-danger" href="#">
+                <i class="glyphicon glyphicon-trash icon-white"></i>
+                Block 
+
+            </a>
+                <input type="text"  placeholder ="comment" class="boxir" name="" id="search"> <a class="btn btn-romus" href="#">
+                <i class="
+glyphicon glyphicon-send icon-white"></i>
+                comment
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    <!--/span-->
+
+    </div><!--/row-->
+
+    
+<style type="text/css">
+    .rfjd{
+background-color: red;
+    }
+</style>
+
+
+<script src="{% static 'table/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'table/js/jquery.cookie.js' %}"></script>
+<script src='{% static "table/bower_components/moment/min/moment.min.js" %}'></script>
+<script src='{% static "table/bower_components/fullcalendar/dist/fullcalendar.min.js" %}'></script>
+<script src='{% static "table/js/jquery.dataTables.min.js" %}'></script>
+<script src="{% static 'table/bower_components/chosen/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'table/bower_components/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'table/js/jquery.noty.js' %}"></script>
+<script src="{% static 'table/bower_components/responsive-tables/responsive-tables.js' %}"></script>
+<script src="{% static 'table/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js' %}"></script>
+<script src="{% static 'table/js/jquery.raty.min.js' %}"></script>
+<script src="{% static 'table/js/jquery.iphone.toggle.js' %}"></script>
+<script src="{% static 'table/js/jquery.autogrow-textarea.js' %}"></script>
+<script src="{% static 'table/js/jquery.uploadify-3.1.min.js' %}"></script>
+<script src="{% static 'table/js/jquery.history.js' %}"></script>
+<script src="{% static 'table/js/charisma.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+<script type="text/javascript">
+function ban(el) {
+    id = document.getElementById(el.name)
+    id.className = 'label-default label label-danger'
+    id.textContent = 'Banned'
+
+    $.ajax({
+        url: '/ban/', 
+        type: 'get',
+        data: {uid: el.name},
+        dataType: 'html',
+    })
+}
+
+
+   var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
+        datasets: [{
+            data: [27.92, 17.53, 14.94, 26.62, 12.99],
+            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
+            borderWidth: 0.5 ,
+            borderColor: '#ddd'
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Recommended Daily Diet',
+            position: 'top',
+            fontSize: 16,
+            fontColor: '#111',
+            padding: 20
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                boxWidth: 20,
+                fontColor: '#111',
+                padding: 15
+            }
+        },
+        tooltips: {
+            enabled: false
+        },
+        plugins: {
+            datalabels: {
+                color: '#111',
+                textAlign: 'center',
+                font: {
+                    lineHeight: 1.6
+                },
+                formatter: function(value, ctx) {
+                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value ;
+                }
+            }
+        }
+    }
+});
+
+      
+    </script>
+   <script type="text/javascript">// Получение ссылки на элемент canvas в DOM
+const $grafica = document.querySelector("#grafica");
+// Tags - это метки, которые идут по оси X.  
+const tags = ["32x", "64x"]
+// У нас может быть несколько наборов данных. Давайте начнем с одного
+const dataSales2020 = {
+    label: "X OC",
+    data: [10,14], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
+    backgroundColor: 'rgba(164, 67, 162, 0.2)', // Цвет фона
+    borderColor: 'rgba(222, 11, 218, 1)', // Цвет границ
+    borderWidth: 1,// Толщина границ
+};
+new Chart($grafica, {
+    type: 'bar',// Тип графики - изменяем тип здесь.
+    data: {
+        labels: tags,
+        datasets: [
+            dataSales2020,
+            // Больше данных ...
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+});</script>
+</body>
+</html>
