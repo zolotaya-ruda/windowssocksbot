@@ -19,3 +19,7 @@ class Bot(models.Model):
 
     is_x64 = models.BooleanField(default=False)
     is_server = models.BooleanField(default=False)
+
+    date = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()

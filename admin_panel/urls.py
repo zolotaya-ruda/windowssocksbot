@@ -3,8 +3,8 @@ from .views import AdminPanel, Handlers, Subsidiary
 from django.conf import settings
 from django.conf.urls.static import static
 
-ap = AdminPanel()
 sub = Subsidiary()
+ap = AdminPanel(sub)
 handlers = Handlers(sub)
 
 urlpatterns = [

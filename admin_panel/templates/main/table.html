@@ -199,8 +199,22 @@ glyphicon glyphicon-send icon-white"></i>
     </table>
     </div>
     </div>
+
     </div>
-    <!--/span-->
+
+    <div class="col-md-12 center-block">
+        <div class="dataTables_paginate paging_bootstrap pagination">
+        <ul class="pagination">
+            
+            <li class="prev disabled"><a href="#">← Previous</a></li>
+            <li class="active"><a href="#">1</a></li>
+            
+            <li><a href="#">2</a></li>
+            <li class="next"><a href="#">Next → </a></li>
+
+        </ul>
+    </div>
+</div>
 
     </div><!--/row-->
 
@@ -245,57 +259,8 @@ function ban(el) {
     })
 }
 
+</script>
 
-   var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
-        datasets: [{
-            data: [27.92, 17.53, 14.94, 26.62, 12.99],
-            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
-            borderWidth: 0.5 ,
-            borderColor: '#ddd'
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Recommended Daily Diet',
-            position: 'top',
-            fontSize: 16,
-            fontColor: '#111',
-            padding: 20
-        },
-        legend: {
-            display: true,
-            position: 'bottom',
-            labels: {
-                boxWidth: 20,
-                fontColor: '#111',
-                padding: 15
-            }
-        },
-        tooltips: {
-            enabled: false
-        },
-        plugins: {
-            datalabels: {
-                color: '#111',
-                textAlign: 'center',
-                font: {
-                    lineHeight: 1.6
-                },
-                formatter: function(value, ctx) {
-                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value ;
-                }
-            }
-        }
-    }
-});
-
-      
-    </script>
    <script type="text/javascript">// Получение ссылки на элемент canvas в DOM
 const $grafica = document.querySelector("#grafica");
 // Tags - это метки, которые идут по оси X.  

