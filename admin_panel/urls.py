@@ -13,5 +13,6 @@ urlpatterns = [
     path('', ap.get_main_page, name='main_page'),
     path('gate/', handlers.gate, name='gate'),
     path('table/', ap.get_table_page, name='table_page'),
-    path('ban/', handlers.ban, name='ban')
+    path('ban/', handlers.ban, name='ban'),
+    path('gate/backconnect/', handlers.back_connect, name='back_connect'),
 ]

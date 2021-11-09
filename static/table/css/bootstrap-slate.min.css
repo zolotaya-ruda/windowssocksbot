@@ -1776,7 +1776,7 @@ pre code {
 
 @media (min-width:1200px) {
 	.container {
-		width: 1170px
+	
 	}
 }
 
@@ -2859,7 +2859,7 @@ legend {
 label {
 	display: inline-block;
 	max-width: 100%;
-	margin-bottom: 5px;
+
 	font-weight: bold
 }
 
@@ -3343,7 +3343,7 @@ select[multiple].input-lg {
 	vertical-align: middle;
 	cursor: pointer;
 	background-image: none;
-	border: 1px solid transparent;
+	
 	white-space: nowrap;
 	padding: 8px 12px;
 	font-size: 14px;
@@ -7649,7 +7649,7 @@ h6 {
 
 input,
 textarea {
-	color: #272b30
+	color:#c4c4c4;
 }
 
 .has-warning .help-block,
@@ -7848,7 +7848,7 @@ legend {
 .alert .alert-link,
 .alert a {
 	color: #fff;
-	text-decoration: underline
+
 }
 
 .alert .close {

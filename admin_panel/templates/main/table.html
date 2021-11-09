@@ -1,7 +1,7 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-{% load static %}
 <head>
+    {% load static %}
  
     <meta charset="utf-8">
     <title>Adminka</title>
@@ -93,7 +93,7 @@ a<!DOCTYPE html>
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Tabl</span></a>
+                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
                                 <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
                                     <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Setting</span></a>
                         </li>
@@ -132,46 +132,53 @@ a<!DOCTYPE html>
     <thead>
     <tr>
         <th>IP</th>
-
+<th>Country</th>
         <th>UID</th>
         <th>ОС</th>
+         <th>X_ОС</th>
         <th>Status</th>
         <th>Additional</th>
+
     </tr>
     </thead>
     <tbody>
     {% for bot in bots %}
     <tr>
-        <td>{{bot.ip}}</td>
+        <td>{{bot.ip}} 127.0.0.1</td>
+            <td class="center"><img class="flag" src="{% static 'table/flags-mini/us.png' %}"> USA</td>
         <td class="center">{{bot.uid}}</td>
+        
+        {% if bot.is_win7 %}
+        <td class="center">WIN7</td>
+        {% elif bot.is_winxp %}
+        <td class="center">WIN XP</td>
+        {% elif bot.is_win8 %}
+        <td class="center">WIN8</td>
+        {% elif bot.is_win10 %}
+        <td class="center">WIN10</td>
+        {% elif bot.is_win11 %}
+        <td class="center">WIN11</td>
+        {% endif %}
 
-            {% if bot.is_win10 == True %}
-            <td class="center">Win10</td>
-            {% elif bot.is_win8 == True %}
-            <td class="center">Win8</td>
-            {% elif bot.is_winxp == True %}
-            <td class="center">WinXP</td>
-            {% elif bot.is_win7 == True %}
-            <td class="center">Win7</td>
-            {% elif bot.is_win11 == True %}
-            <td class="center">Win7</td>
-            {% endif %}
+        {% if bot.is_x64 %}
+        <td class="center">64X</td>
+        {% else %}
+        <td class="center">32X</td>
+        {% endif %}
 
         <td class="center">
-            
             {% if bot.is_banned %}
-            <span class="label-default label label-danger" >Banned</span>
+            <span class="label-default label label-danger">Banned</span>
             {% else %}
-            <span class="label-success label label-default" id="{{bot.uid}}">Active</span>
+            <span class="label-success label label-default">Active</span>
             {% endif %}
 
-            {% if bot.is_online %}
-            <span class="label-success label label-default">Online</span>
-            {% else %}
+            {% if not bot.is_online %}
             <span class="label-success label label-brous">Ofline</span>
+            {% else %}
+            <span class="label-success label label-default">Online</span>
             {% endif %}
 
-            <span class="label-succesr label label-succesr">USA</span>
         </td>
         <td class="center">
             <a class="btn btn-success" href="#">
@@ -182,7 +189,7 @@ a<!DOCTYPE html>
                 <i class="glyphicon glyphicon-edit icon-white"></i>
                Task
             </a>
-            <a onclick="ban(this); return false" name="{{bot.uid}}" class="btn btn-danger" href="#">
+            <a class="btn btn-danger" href="#">
                 <i class="glyphicon glyphicon-trash icon-white"></i>
                 Block 
 
@@ -194,27 +201,15 @@ glyphicon glyphicon-send icon-white"></i>
             </a>
         </td>
     </tr>
+
     {% endfor %}
+    
     </tbody>
     </table>
     </div>
     </div>
-
     </div>
-
-    <div class="col-md-12 center-block">
-        <div class="dataTables_paginate paging_bootstrap pagination">
-        <ul class="pagination">
-            
-            <li class="prev disabled"><a href="#">← Previous</a></li>
-            <li class="active"><a href="#">1</a></li>
-            
-            <li><a href="#">2</a></li>
-            <li class="next"><a href="#">Next → </a></li>
-
-        </ul>
-    </div>
-</div>
+    <!--/span-->
 
     </div><!--/row-->
 
@@ -228,9 +223,9 @@ background-color: red;
 
 <script src="{% static 'table/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'table/js/jquery.cookie.js' %}"></script>
-<script src='{% static "table/bower_components/moment/min/moment.min.js" %}'></script>
-<script src='{% static "table/bower_components/fullcalendar/dist/fullcalendar.min.js" %}'></script>
-<script src='{% static "table/js/jquery.dataTables.min.js" %}'></script>
+<script src="{% static 'table/bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'table/bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'table/js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'table/bower_components/chosen/chosen.jquery.min.js' %}"></script>
 <script src="{% static 'table/bower_components/colorbox/jquery.colorbox-min.js' %}"></script>
 <script src="{% static 'table/js/jquery.noty.js' %}"></script>
@@ -242,55 +237,8 @@ background-color: red;
 <script src="{% static 'table/js/jquery.uploadify-3.1.min.js' %}"></script>
 <script src="{% static 'table/js/jquery.history.js' %}"></script>
 <script src="{% static 'table/js/charisma.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
-<script type="text/javascript">
-function ban(el) {
-    id = document.getElementById(el.name)
-    id.className = 'label-default label label-danger'
-    id.textContent = 'Banned'
-
-    $.ajax({
-        url: '/ban/', 
-        type: 'get',
-        data: {uid: el.name},
-        dataType: 'html',
-    })
-}
-
-</script>
-
-   <script type="text/javascript">// Получение ссылки на элемент canvas в DOM
-const $grafica = document.querySelector("#grafica");
-// Tags - это метки, которые идут по оси X.  
-const tags = ["32x", "64x"]
-// У нас может быть несколько наборов данных. Давайте начнем с одного
-const dataSales2020 = {
-    label: "X OC",
-    data: [10,14], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
-    backgroundColor: 'rgba(164, 67, 162, 0.2)', // Цвет фона
-    borderColor: 'rgba(222, 11, 218, 1)', // Цвет границ
-    borderWidth: 1,// Толщина границ
-};
-new Chart($grafica, {
-    type: 'bar',// Тип графики - изменяем тип здесь.
-    data: {
-        labels: tags,
-        datasets: [
-            dataSales2020,
-            // Больше данных ...
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }],
-        },
-    }
-});</script>
+<script type="text/javascript"></script>
 </body>
 </html>

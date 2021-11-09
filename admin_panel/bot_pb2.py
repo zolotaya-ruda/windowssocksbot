@@ -14,41 +14,118 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ntest.proto\"\x89\x01\n\x0bRegisterBot\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x14\n\x0c\x63omputername\x18\x02 \x01(\x0c\x12\x10\n\x08username\x18\x03 \x01(\x0c\x12\x10\n\x08os_major\x18\x04 \x01(\x05\x12\x10\n\x08os_minor\x18\x05 \x01(\x05\x12\x0e\n\x06is_x64\x18\x06 \x01(\x08\x12\x11\n\tis_server\x18\x07 \x01(\x08\"\x1d\n\x0e\x41\x63tivityReport\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\":\n\x0cTaskGiveaway\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x0e\n\x06server\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ntest.proto\"\xf2\x01\n\x06\x42otMsg\x1a\x89\x01\n\x0bRegisterBot\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x14\n\x0c\x63omputername\x18\x02 \x01(\x0c\x12\x10\n\x08username\x18\x03 \x01(\x0c\x12\x10\n\x08os_major\x18\x04 \x01(\x05\x12\x10\n\x08os_minor\x18\x05 \x01(\x05\x12\x0e\n\x06is_x64\x18\x06 \x01(\x08\x12\x11\n\tis_server\x18\x07 \x01(\x08\x1a\x1d\n\x0e\x41\x63tivityReport\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x1a=\n\rTaskCompleted\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0f\n\x07task_id\x18\x02 \x01(\x0c\x12\x0e\n\x06result\x18\x03 \x01(\x08\"\x8c\x01\n\x08PanelMsg\x1a\x33\n\x12RegistrationResult\x12\r\n\x05\x64ummy\x18\x01 \x01(\x08\x12\x0e\n\x06result\x18\x02 \x01(\x08\x1aK\n\x0cTaskGiveaway\x12\x0f\n\x07task_id\x18\x01 \x01(\x0c\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x0e\n\x06server\x18\x03 \x01(\t\x12\x0c\n\x04port\x18\x04 \x01(\x05\"y\n\x0e\x42\x61\x63kConnectMsg\x1a\x38\n\rNewConnection\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x0c\n\x04port\x18\x03 \x01(\x05\x1a-\n\x10\x43onnectionClosed\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04type\x18\x02 \x01(\x05\x62\x06proto3')
 
 
 
-_REGISTERBOT = DESCRIPTOR.message_types_by_name['RegisterBot']
-_ACTIVITYREPORT = DESCRIPTOR.message_types_by_name['ActivityReport']
-_TASKGIVEAWAY = DESCRIPTOR.message_types_by_name['TaskGiveaway']
-RegisterBot = _reflection.GeneratedProtocolMessageType('RegisterBot', (_message.Message,), {
-  'DESCRIPTOR' : _REGISTERBOT,
+_BOTMSG = DESCRIPTOR.message_types_by_name['BotMsg']
+_BOTMSG_REGISTERBOT = _BOTMSG.nested_types_by_name['RegisterBot']
+_BOTMSG_ACTIVITYREPORT = _BOTMSG.nested_types_by_name['ActivityReport']
+_BOTMSG_TASKCOMPLETED = _BOTMSG.nested_types_by_name['TaskCompleted']
+_PANELMSG = DESCRIPTOR.message_types_by_name['PanelMsg']
+_PANELMSG_REGISTRATIONRESULT = _PANELMSG.nested_types_by_name['RegistrationResult']
+_PANELMSG_TASKGIVEAWAY = _PANELMSG.nested_types_by_name['TaskGiveaway']
+_BACKCONNECTMSG = DESCRIPTOR.message_types_by_name['BackConnectMsg']
+_BACKCONNECTMSG_NEWCONNECTION = _BACKCONNECTMSG.nested_types_by_name['NewConnection']
+_BACKCONNECTMSG_CONNECTIONCLOSED = _BACKCONNECTMSG.nested_types_by_name['ConnectionClosed']
+BotMsg = _reflection.GeneratedProtocolMessageType('BotMsg', (_message.Message,), {
+
+  'RegisterBot' : _reflection.GeneratedProtocolMessageType('RegisterBot', (_message.Message,), {
+    'DESCRIPTOR' : _BOTMSG_REGISTERBOT,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:BotMsg.RegisterBot)
+    })
+  ,
+
+  'ActivityReport' : _reflection.GeneratedProtocolMessageType('ActivityReport', (_message.Message,), {
+    'DESCRIPTOR' : _BOTMSG_ACTIVITYREPORT,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:BotMsg.ActivityReport)
+    })
+  ,
+
+  'TaskCompleted' : _reflection.GeneratedProtocolMessageType('TaskCompleted', (_message.Message,), {
+    'DESCRIPTOR' : _BOTMSG_TASKCOMPLETED,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:BotMsg.TaskCompleted)
+    })
+  ,
+  'DESCRIPTOR' : _BOTMSG,
   '__module__' : 'test_pb2'
-  # @@protoc_insertion_point(class_scope:RegisterBot)
+  # @@protoc_insertion_point(class_scope:BotMsg)
   })
-_sym_db.RegisterMessage(RegisterBot)
+_sym_db.RegisterMessage(BotMsg)
+_sym_db.RegisterMessage(BotMsg.RegisterBot)
+_sym_db.RegisterMessage(BotMsg.ActivityReport)
+_sym_db.RegisterMessage(BotMsg.TaskCompleted)
 
-ActivityReport = _reflection.GeneratedProtocolMessageType('ActivityReport', (_message.Message,), {
-  'DESCRIPTOR' : _ACTIVITYREPORT,
-  '__module__' : 'test_pb2'
-  # @@protoc_insertion_point(class_scope:ActivityReport)
-  })
-_sym_db.RegisterMessage(ActivityReport)
+PanelMsg = _reflection.GeneratedProtocolMessageType('PanelMsg', (_message.Message,), {
 
-TaskGiveaway = _reflection.GeneratedProtocolMessageType('TaskGiveaway', (_message.Message,), {
-  'DESCRIPTOR' : _TASKGIVEAWAY,
+  'RegistrationResult' : _reflection.GeneratedProtocolMessageType('RegistrationResult', (_message.Message,), {
+    'DESCRIPTOR' : _PANELMSG_REGISTRATIONRESULT,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:PanelMsg.RegistrationResult)
+    })
+  ,
+
+  'TaskGiveaway' : _reflection.GeneratedProtocolMessageType('TaskGiveaway', (_message.Message,), {
+    'DESCRIPTOR' : _PANELMSG_TASKGIVEAWAY,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:PanelMsg.TaskGiveaway)
+    })
+  ,
+  'DESCRIPTOR' : _PANELMSG,
   '__module__' : 'test_pb2'
-  # @@protoc_insertion_point(class_scope:TaskGiveaway)
+  # @@protoc_insertion_point(class_scope:PanelMsg)
   })
-_sym_db.RegisterMessage(TaskGiveaway)
+_sym_db.RegisterMessage(PanelMsg)
+_sym_db.RegisterMessage(PanelMsg.RegistrationResult)
+_sym_db.RegisterMessage(PanelMsg.TaskGiveaway)
+
+BackConnectMsg = _reflection.GeneratedProtocolMessageType('BackConnectMsg', (_message.Message,), {
+
+  'NewConnection' : _reflection.GeneratedProtocolMessageType('NewConnection', (_message.Message,), {
+    'DESCRIPTOR' : _BACKCONNECTMSG_NEWCONNECTION,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:BackConnectMsg.NewConnection)
+    })
+  ,
+
+  'ConnectionClosed' : _reflection.GeneratedProtocolMessageType('ConnectionClosed', (_message.Message,), {
+    'DESCRIPTOR' : _BACKCONNECTMSG_CONNECTIONCLOSED,
+    '__module__' : 'test_pb2'
+    # @@protoc_insertion_point(class_scope:BackConnectMsg.ConnectionClosed)
+    })
+  ,
+  'DESCRIPTOR' : _BACKCONNECTMSG,
+  '__module__' : 'test_pb2'
+  # @@protoc_insertion_point(class_scope:BackConnectMsg)
+  })
+_sym_db.RegisterMessage(BackConnectMsg)
+_sym_db.RegisterMessage(BackConnectMsg.NewConnection)
+_sym_db.RegisterMessage(BackConnectMsg.ConnectionClosed)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _REGISTERBOT._serialized_start=15
-  _REGISTERBOT._serialized_end=152
-  _ACTIVITYREPORT._serialized_start=154
-  _ACTIVITYREPORT._serialized_end=183
-  _TASKGIVEAWAY._serialized_start=185
-  _TASKGIVEAWAY._serialized_end=243
+  _BOTMSG._serialized_start=15
+  _BOTMSG._serialized_end=257
+  _BOTMSG_REGISTERBOT._serialized_start=26
+  _BOTMSG_REGISTERBOT._serialized_end=163
+  _BOTMSG_ACTIVITYREPORT._serialized_start=165
+  _BOTMSG_ACTIVITYREPORT._serialized_end=194
+  _BOTMSG_TASKCOMPLETED._serialized_start=196
+  _BOTMSG_TASKCOMPLETED._serialized_end=257
+  _PANELMSG._serialized_start=260
+  _PANELMSG._serialized_end=400
+  _PANELMSG_REGISTRATIONRESULT._serialized_start=272
+  _PANELMSG_REGISTRATIONRESULT._serialized_end=323
+  _PANELMSG_TASKGIVEAWAY._serialized_start=325
+  _PANELMSG_TASKGIVEAWAY._serialized_end=400
+  _BACKCONNECTMSG._serialized_start=402
+  _BACKCONNECTMSG._serialized_end=523
+  _BACKCONNECTMSG_NEWCONNECTION._serialized_start=420
+  _BACKCONNECTMSG_NEWCONNECTION._serialized_end=476
+  _BACKCONNECTMSG_CONNECTIONCLOSED._serialized_start=478
+  _BACKCONNECTMSG_CONNECTIONCLOSED._serialized_end=523
 # @@protoc_insertion_point(module_scope)
