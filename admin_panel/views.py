@@ -109,6 +109,14 @@ class AdminPanel:
         bots = Bot.objects.all()
         return render(request, 'main/table.html', {'bots': bots})
 
+    @staticmethod
+    def task(request) -> render:
+        return render(request, 'main/task.html')
+
+    @staticmethod
+    def admin_table(request):
+        return render(request, 'main/admin_table.html')
+
 
 # ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
 
