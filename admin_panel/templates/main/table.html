@@ -93,9 +93,9 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="" ><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
-                                <li><a class="ajax-link" href="{% url 'task' %}"><i class="glyphicon glyphicon-home"></i><span> Work</span></a>
-                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Setting</span></a>
+                            <li><a class="ajax-link"><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
+                                <li><a class="ajax-link"><i class="glyphicon glyphicon-home"></i><span> Work</span></a>
+                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
                         </li>
                         
                 </div>
@@ -185,7 +185,7 @@
                 <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                More
             </a>
-            <a class="btn btn-info" href="#">
+            <a class="btn btn-info" href="{% url 'task' %}">
                 <i class="glyphicon glyphicon-edit icon-white"></i>
                Task
             </a>

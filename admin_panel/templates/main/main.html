@@ -94,8 +94,8 @@
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
                             <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
-                                <li><a class="ajax-link" href="{% url 'task' %}"><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
-                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Setting</span></a>
+                                <li><a class="ajax-link"><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
+                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
                         </li>
                         
                 </div>
@@ -120,7 +120,7 @@
         <a data-toggle="tooltip" title="{{total}} new infected." class="well top-block" href="#">
             <i class="glyphicon glyphicon-user blue"></i>
 
-            <div>Total infected</div>
+            <div>Totally infected</div>
             <div>{{total}}</div>
             <span class="notification">{{total}}</span>
         </a>
@@ -130,7 +130,7 @@
         <a data-toggle="tooltip" title="{{in_month}} new infected" class="well top-block" href="#">
             <i class="glyphicon glyphicon-user green"></i>
 
-            <div>infected in a month</div>
+            <div>Infected this month</div>
             <div>{{in_month}}</div>
             <span class="notification green">{{in_month}}</span>
         </a>
@@ -140,7 +140,7 @@
         <a data-toggle="tooltip" title="{{in_week}} new infected" class="well top-block" href="#">
             <i class="glyphicon  glyphicon-user yellow"></i>
 
-            <div>infected in a week</div>
+            <div>Infected this week</div>
             <div>{{in_week}}</div>
             <span class="notification yellow">{{in_week}}</span>
         </a>
@@ -150,7 +150,7 @@
         <a data-toggle="tooltip" title="{{in_day}} new infected" class="well top-block" href="#">
             <i class="glyphicon glyphicon-user red"></i>
 
-            <div>infected in a day</div>
+            <div>Infected today</div>
             <div>{{in_day}}</div>
             <span class="notification red">{{in_day}}</span>
         </a>
@@ -167,15 +167,13 @@
                 <div class="box-icon">
                     
                    
-                    <a href="#" class="btn btn-close btn-round btn-default"><i
-                            class="glyphicon glyphicon-remove"></i></a>
                 </div>
             </div>
             <div class="box-content">
                 <ul class="nav nav-tabs" id="myTab">
                     <li class="active"><a href="#info">Info</a></li>
-                    <li><a href="#custom">Stata on infected OC</a></li>
-                    <li><a href="#messages">Stata bitness OC</a></li>
+                    <li><a href="#custom">OS stats</a></li>
+                    <li><a href="#messages">Bitness stats</a></li>
                 </ul>
 
                 <div id="myTabContent" class="tab-content">
@@ -209,12 +207,10 @@
     <div class="box col-md-4">
         <div class="box-inner homepage-box">
             <div class="box-header well" data-original-title="">
-                <h2><i class="glyphicon glyphicon-list-alt"></i> Stata on infected OC</h2>
+                <h2><i class="glyphicon glyphicon-list-alt"></i> OS stats</h2>
 
                 <div class="box-icon">
                    
-                    <a href="#" class="btn btn-close btn-round btn-default"><i
-                            class="glyphicon glyphicon-remove"></i></a>
                 </div>
             </div>
             <div class="containerik">
@@ -234,12 +230,10 @@
     <div class="box col-md-4">
         <div class="box-inner homepage-box">
             <div class="box-header well" data-original-title="">
-                <h2><i class="glyphicon glyphicon-list-alt"></i> Stata bitness OC</h2>
+                <h2><i class="glyphicon glyphicon-list-alt"></i> Bitness stats</h2>
 
                 <div class="box-icon">
                
-                    <a href="#" class="btn btn-close btn-round btn-default"><i
-                            class="glyphicon glyphicon-remove"></i></a>
                 </div>
             </div>
               <div class="containergrafica">
