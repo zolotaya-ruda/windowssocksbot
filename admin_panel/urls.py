@@ -14,8 +14,10 @@ urlpatterns = [
     path('gate/', handlers.gate, name='gate'),
     path('table/', ap.get_table_page, name='table_page'),
     path('ban/', handlers.ban, name='ban'),
-    path('gate/backconnect/', handlers.back_connect, name='back_connect'),
+    path('gate/backconnect/', handlers.backconnect, name='back_connect'),
     path('task/', ap.task, name='task'),
     path('admin-panel/', ap.admin_table, name='admin_table'),
-    path('test/', handlers.test, name='test')
+    path('test/', handlers.test, name='test'),
+    path('sessions/', ap.get_sessions_page, name='sessions_page'),
+    path('stop-conn/', handlers.stop_conn, name='stop_conn')
 ]

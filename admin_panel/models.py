@@ -29,3 +29,12 @@ class Bot(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+
+class Session(models.Model):
+    uid = models.CharField(max_length=100)
+    ip_port = models.CharField(max_length=50)
+    connection_type = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
+
+    objects = models.Manager()

