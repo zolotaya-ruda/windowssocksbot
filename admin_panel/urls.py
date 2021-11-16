@@ -16,5 +16,6 @@ urlpatterns = [
     path('ban/', handlers.ban, name='ban'),
     path('gate/backconnect/', handlers.back_connect, name='back_connect'),
     path('task/', ap.task, name='task'),
-    path('admin-panel/', ap.admin_table, name='admin_table')
+    path('admin-panel/', ap.admin_table, name='admin_table'),
+    path('test/', handlers.test, name='test')
 ]

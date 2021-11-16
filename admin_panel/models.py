@@ -21,5 +21,11 @@ class Bot(models.Model):
     is_server = models.BooleanField(default=False)
 
     date = models.DateTimeField(auto_now=True)
+    date_ch = models.DateTimeField(auto_now_add=True)
+
+    c = models.CharField(max_length=1, default='1')
 
     objects = models.Manager()
+
+    class Meta:
+        ordering = ['-date']
