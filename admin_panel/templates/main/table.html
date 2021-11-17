@@ -93,9 +93,9 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
+                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
                                 <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
-                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
+                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
                         </li>
                         
                 </div>
@@ -126,7 +126,7 @@
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
 
-<input type="text"  placeholder ="searsh" class="boxi" name="" id="search">
+<input type="text"  placeholder ="search" class="boxi" name="" id="search">
     </div>
     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
@@ -145,7 +145,7 @@
     {% for bot in bots %}
     <tr>
         <td>{{bot.ip}}</td>
-            <td class="center"><img class="flag" src="{% static 'table/flags-mini/us.png' %}"> USA</td>
+            <td class="center"><img class="flag" src="{% static 'table/flags-mini/{{bot.country}}.png' %}"> {{bot.country}}</td>
         <td class="center">{{bot.uid}}</td>
         
         {% if bot.is_win7 %}

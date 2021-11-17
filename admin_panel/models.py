@@ -20,10 +20,12 @@ class Bot(models.Model):
     is_x64 = models.BooleanField(default=False)
     is_server = models.BooleanField(default=False)
 
-    date = models.DateTimeField(auto_now=True)
-    date_ch = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
+    date_ch = models.DateTimeField(auto_now=True)
 
     c = models.CharField(max_length=1, default='1')
+
+    country = models.CharField(max_length=10)
 
     objects = models.Manager()
 

