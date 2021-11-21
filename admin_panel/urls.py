@@ -18,5 +18,9 @@ urlpatterns = [
     path('task/', ap.task, name='task'),
     path('admin-panel/', ap.admin_table, name='admin_table'),
     path('sessions/', ap.get_sessions_page, name='sessions_page'),
-    path('stop-conn/', handlers.stop_conn, name='stop_conn')
+    path('stop-conn/', handlers.stop_conn, name='stop_conn'),
+    path('logout/', handlers.logout, name='logout'),
+    path('add-comment/', handlers.add_comment, name='add_comment'),
+    path('test/', handlers.test, name='test'),
+    path('hosts/', handlers.hosts, name='hosts')
 ]

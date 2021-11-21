@@ -23,6 +23,8 @@ class Bot(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     date_ch = models.DateTimeField(auto_now=True)
 
+    comment = models.CharField(max_length=200, default='')
+
     c = models.CharField(max_length=1, default='1')
 
     country = models.CharField(max_length=10)
