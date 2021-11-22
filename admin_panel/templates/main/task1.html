@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+ 
     <meta charset="utf-8">
     <title>Adminka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +29,6 @@
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="{% static 'task/bower_components/jquery/jquery.min.js' %}"></script>
-   
  
 
 </head>
@@ -52,7 +52,7 @@
                 <ul class="dropdown-menu">
                 
                     <li class="divider"></li>
-                    <li><a onclick="logout()">Logout</a></li>
+                    <li><a href="login.html">Logout</a></li>
                 </ul>
             </div>
          
@@ -91,10 +91,10 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
-                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Table</span></a>
+                                <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Work </span></a>
+                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Admin Table</span></a>
                         </li>
-                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
                         
                 </div>
             </div>
@@ -124,12 +124,42 @@
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
 
+<input type="text"  placeholder ="NAME TASK" class="boxi" name="" id="NAME TASK">  <a class="btn btn-danger" href="#">
                 <i class="
-glyphicon glyphicon-question-sign red"></i> <span class="textus">
-                specify the name of the task and geolocation, optionally select a criterion, a specific oc and oc architecture, specify the number of repetitions and click "create".</span>
+glyphicon glyphicon-send icon-white"></i>
+                Apply
+
             </a>
     </div>
- 
+    <div class="cheks">
+      <article class="feature1">
+    <input type="checkbox" id="feature1"/>
+    <div>
+      <span>
+       Launch FTP
+       
+      </span>
+    </div>
+  </article>
+  
+  <article class="feature2">
+    <input type="checkbox" id="feature2"/>
+    <div>
+      <span>
+      launch reverse shell
+      </span>
+    </div>
+  </article>
+  
+  <article class="feature3">
+    <input type="checkbox" id="feature3"/>
+    <div>
+      <span>
+       launch socc5.
+      </span>
+    </div>
+  </article>
+  </div>
 
  
     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
@@ -141,111 +171,8 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     
     </tbody>
     </table>
-    <div class="task">
-<div class="inputs">
-<input type="text"  placeholder ="NAME TASK" class="boxi" name="" id="NAME TASK"> 
 <input type="text"  placeholder ="Country" class="boxim" name="" id="search">
-</div>
 
-
-
-<div class="cheesers">
-
-   <div class="cheks">
-      <article class="feature1">
-    <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature3').checked = false;" id="feature1"/>
-    <div>
-      <span>
-       Launch FTP
-       
-      </span>
-    </div>
-  </article>
-  
-  <article class="feature2">
-    <input type="checkbox" onclick="document.getElementById('feature1').checked = false; document.getElementById('feature3').checked = false;" id="feature2"/>
-    <div>
-      <span>
-      reverse shell
-      </span>
-    </div>
-  </article>
-  
-  <article class="feature3">
-    <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature1').checked = false;" id="feature3"/>
-    <div>
-      <span>
-       launch socc5.
-      </span>
-    </div>
-  </article>
-  </div>
-</div>
-<div class="forms">
-
-    <form>
-    
-    <h2 class="nadpis"> WIN OC </h2>
-    
-    <div class="checkbox-block">
- <input class="custom-checkbox" id="dget-up-6" type="checkbox" onclick="document.getElementById('get-up-6').checked = false; 
- document.getElementById('make-bed-6').checked = false;  document.getElementById('clean-teeth-6').checked = false; document.getElementById('dress-up-6').checked = false;" value="dget-up-6" name="dget-up-6"/>
-    <label for="dget-up-6"> <span class="texto">ALL WIN</span></label>
-      <!--checkbox 1-->
-    <input class="custom-checkbox" id="get-up-6" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="get-up-6" name="get-up-6"/>
-    <label for="get-up-6"> <span class="texto">WIN7</span></label>
-    
-    <!--checkbox 2-->
-    <input class="custom-checkbox" id="make-bed-6" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="make-bed-6" name="make-bed-6"/>
-    <label for="make-bed-6"> <span class="texto">WIN8</span></label>
-    
-    <!--checkbox 3-->
-    <input class="custom-checkbox" onclick="document.getElementById('dget-up-6').checked = false;" id="clean-teeth-6" type="checkbox" value="clean-teeth-6" name="clean-teeth-6"/>
-    <label for="clean-teeth-6"> <span class="texto">WIN10</span></label>
-        <input class="custom-checkbox" id="dress-up-6" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="dress-up-6" name="dress-up-6"/>
-    <label for="dress-up-6"> <span class="texto">WIN11</span></label>
-
-    
-    </div>
-  </form>
-
-<form>
-    
-    <h2 class="nadpis">WIN X OC</h2>
-    
-    <div class="checkbox-block">
-      
-      <!--checkbox 1-->
-    <input class="custom-checkbox" id="get-up-1" type="checkbox" onclick="document.getElementById('make-bed-1').checked = false; document.getElementById('clean-teeth-1').checked = false;" value="get-up-1" name="get-up-1"/>
-    <label for="get-up-1"> <span class="texto">64x & 32x</span></label>
-    
-    <!--checkbox 2-->
-    <input class="custom-checkbox" id="make-bed-1" onclick="document.getElementById('get-up-1').checked = false" type="checkbox" value="make-bed-1" name="make-bed-1"/>
-    <label for="make-bed-1"> <span class="texto">32x</span></label>
-    
-    <!--checkbox 3-->
-    <input class="custom-checkbox" id="clean-teeth-1" onclick="document.getElementById('get-up-1').checked = false" type="checkbox" value="clean-teeth-1" name="clean-teeth-1"/>
-    <label for="clean-teeth-1"> <span class="texto">64x</span></label>
-    
-    <!--checkbox 4-->
-
-      
-    </div>
-  </form>
-  
-  <!-- checkbox #2 form -->
-  
-  
-  <!-- checkbox #6 form -->
-
-
-
-
-</div>
-
-
-
-<div class="posledn">
 
 <form class="gehueu">
             <p>
@@ -254,13 +181,87 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
             </p>
           
         </form>
+
+
+
+
+
+
+  <div class="chekss">
+      <article class="feature1">
+    <input type="checkbox" id="feature1"/>
+    <div>
+      <span>
+       All Win X OC
+       
+      </span>
+    </div>
+  </article>
   
- 
-  <button onclick="create_task()" class ="button-hover">
-      <span> Create </span>
-    </button>
+  <article class="feature2">
+    <input type="checkbox" id="feature2"/>
+    <div>
+      <span>
+      32x
+      </span>
+    </div>
+  </article>
+  
+  <article class="feature3">
+    <input type="checkbox" id="feature3"/>
+    <div>
+      <span>
+      64x
+      </span>
+    </div>
+  </article>
+  </div>
+<div class="select-box">
+  <div class="select-box__current" tabindex="1">
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="0" value="1" name="Ben" checked="checked"/>
+      <p class="select-box__input-text">All win</p>
+    </div>
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="1" value="2" name="Ben"/>
+      <p class="select-box__input-text">win7</p>
+    </div>
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="2" value="3" name="Ben"/>
+      <p class="select-box__input-text">win8</p>
+    </div>
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="3" value="4" name="Ben"/>
+      <p class="select-box__input-text">win10</p>
+    </div>
+    <div class="select-box__value">
+      <input class="select-box__input" type="radio" id="4" value="5" name="Ben"/>
+      <p class="select-box__input-text">win11</p>
+    </div><img class="select-box__icon" src="http://cdn.onlinewebfonts.com/svg/img_295694.svg" alt="Arrow Icon" aria-hidden="true"/>
+  </div>
+  <ul class="select-box__list">
+    <li>
+      <label class="select-box__option" for="0" aria-hidden="aria-hidden">all win</label>
+    </li>
+    <li>
+      <label class="select-box__option" for="1" aria-hidden="aria-hidden">win7</label>
+    </li>
+    <li>
+      <label class="select-box__option" for="2" aria-hidden="aria-hidden">win8</label>
+    </li>
+    <li>
+      <label class="select-box__option" for="3" aria-hidden="aria-hidden">win10</label>
+    </li>
+    <li>
+      <label class="select-box__option" for="4" aria-hidden="aria-hidden">win11</label>
+    </li>
+  </ul>
+
 </div>
-</div>
+
+
+
+
     </div>
 
 
@@ -296,51 +297,8 @@ background-color: red;
 <script src="{% static 'task/js/jquery.history.js' %}"></script>
 <script src="{% static 'task/js/charisma.js' %}"></script>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
 <script type="text/javascript">
-
-    function create_task() {
-
-        ftp = document.getElementById('feature1').checked
-        shell = document.getElementById('feature2').checked
-        sock = document.getElementById('feature3').checked
-
-        all_win = document.getElementById('dget-up-6').checked
-        win7 = document.getElementById('get-up-6').checked
-        win8 = document.getElementById('make-bed-6').checked
-        win10 = document.getElementById('clean-teeth-6').checked
-        win11 = document.getElementById('dress-up-6').checked
-
-        x32_64 = document.getElementById('get-up-1').checked
-        x32 = document.getElementById('make-bed-1').checked
-        x64 = document.getElementById('clean-teeth-1').checked
-
-        $.ajax({
-            url: '/create-task/', 
-            type: 'post',
-            data: {ftp: ftp, shell: shell, sock: sock, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, x32_64: x32_64, x32: x32, x64: x64},
-            dataType: 'html',
-        })
-    }
-
-    function logout() {
-        $.ajax({
-            url: '/logout/',
-            type: 'get',
-            data: {},
-            dataType: 'html',
-            success: function(data){
-                const json = data
-                const response = JSON.parse(json);
-                if (response.v == '200') {
-                    window.location.href = '/login/'
-                }
-            }
-
-        })
-    }
-
    var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'doughnut',

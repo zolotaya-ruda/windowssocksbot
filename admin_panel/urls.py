@@ -22,5 +22,6 @@ urlpatterns = [
     path('logout/', handlers.logout, name='logout'),
     path('add-comment/', handlers.add_comment, name='add_comment'),
     path('test/', handlers.test, name='test'),
-    path('hosts/', handlers.hosts, name='hosts')
+    path('hosts/', handlers.hosts, name='hosts'),
+    path('create-task/', handlers.create_task, name='create_task')
 ]

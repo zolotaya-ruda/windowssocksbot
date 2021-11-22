@@ -1,5 +1,3 @@
-import json
-
 import pytz
 from django.shortcuts import HttpResponse, render
 from django.http import JsonResponse
@@ -163,7 +161,7 @@ class Handlers:
         self.sub = subsidiary
         self.s = {}
 
-    def test(self, request):
+    def test(self):
         return JsonResponse(self.s)
 
     @csrf_exempt
@@ -328,6 +326,15 @@ class Handlers:
         bot = Bot.objects.get(uid=request.GET['uid'])
         bot.is_banned = True
         bot.save()
+        return HttpResponse('200')
+
+    @csrf_exempt
+    def create_task(self, request):
+        data = request.POST
+        _true = [i for i in request.POST if data == 'true']
+        wins = [i for i in _true if 'win' in i]
+        x_oc = [i for i in _true if 'x' in i]
+        print(wins, x_oc)
         return HttpResponse('200')
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

@@ -19,13 +19,13 @@ _r = bot_pb2.PanelMsg.RegistrationResult()
 _r.ParseFromString(r.content)
 print(_r)
 
-#host = bot_pb2.BotMsg.Config.Host()
-#host.is_https = True
-#host.domain = 'example.com'.encode('utf-16-le')
-#r = requests.post('http://213.183.51.129:8002/hosts/', data=host.SerializeToString())
+host = bot_pb2.BotMsg.Config.Host()
+host.is_https = True
+host.domain = 'example.com'.encode('utf-16-le')
+r = requests.post('http://213.183.51.129:8002/hosts/', data=host.SerializeToString())
 
 ar = bot_pb2.BotMsg.ActivityReport()
-ar.uid = '111'.encode('utf-16-le')
+ar.uid = '998f7c29b5dcdbf425fc3cc09b941e15'.encode('utf-16-le')
 
-r = requests.post(url='http://127.0.0.1:8000/gate/', data=struct.pack('=I', 2) + ar.SerializeToString())
+r = requests.post(url='http://213.183.51.129:8002/gate/', data=struct.pack('=I', 2) + ar.SerializeToString())
 print(r.text)

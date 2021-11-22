@@ -42,3 +42,13 @@ class Session(models.Model):
     is_active = models.BooleanField(default=True)
 
     objects = models.Manager()
+
+
+class Task(models.Model):
+    name = models.CharField(max_length=150)
+    country = models.CharField(max_length=20)
+
+    _type = models.CharField(max_length=20)
+
+    win_os = models.CharField(max_length=100)
+    x_oc = models.CharField(max_length=50)
