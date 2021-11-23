@@ -143,8 +143,8 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     </table>
     <div class="task">
 <div class="inputs">
-<input type="text"  placeholder ="NAME TASK" class="boxi" name="" id="NAME TASK"> 
-<input type="text"  placeholder ="Country" class="boxim" name="" id="search">
+<input type="text"  placeholder ="NAME TASK" class="boxi" name="name" id="name"> 
+<input type="text"  placeholder ="Country" class="boxim" name="" id="country">
 </div>
 
 
@@ -306,6 +306,19 @@ background-color: red;
         shell = document.getElementById('feature2').checked
         sock = document.getElementById('feature3').checked
 
+        name = document.getElementById('name').value;
+        country = document.getElementById('country').value;
+
+        reps = document.getElementById('age').value;
+
+        if (ftp == true) {
+            _type = 'ftp'
+        } else if(shell == true){
+            _type = 'shell'
+        } else if (sock == true){
+            _type = 'sock'
+        }
+
         all_win = document.getElementById('dget-up-6').checked
         win7 = document.getElementById('get-up-6').checked
         win8 = document.getElementById('make-bed-6').checked
@@ -319,7 +332,7 @@ background-color: red;
         $.ajax({
             url: '/create-task/', 
             type: 'post',
-            data: {ftp: ftp, shell: shell, sock: sock, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, x32_64: x32_64, x32: x32, x64: x64},
+            data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, x32_64: x32_64, x32: x32, x64: x64},
             dataType: 'html',
         })
     }

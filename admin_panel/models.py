@@ -48,7 +48,12 @@ class Task(models.Model):
     name = models.CharField(max_length=150)
     country = models.CharField(max_length=20)
 
-    _type = models.CharField(max_length=20)
+    repetitions = models.IntegerField()
+    done = models.IntegerField()
 
-    win_os = models.CharField(max_length=100)
-    x_oc = models.CharField(max_length=50)
+    type1 = models.CharField(max_length=20)
+
+    winos = models.CharField(max_length=100)
+    xoc = models.CharField(max_length=50)
+
+    objects = models.Manager()
