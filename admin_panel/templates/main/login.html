@@ -21,6 +21,11 @@
 
         </form>
 
+        <div id="errore" style='display: none;' class="erro"><a class="baton" onclick="document.getElementById('errore').style.display='none'">x</a>
+
+    		<p class="textus"> invalid password or username, try to enter it again.</p>
+		</div>
+
         <script type="text/javascript">
         	function log(argument) {
         		$.ajax({
@@ -34,6 +39,9 @@
                 		if (response.v == '200') {
                     		window.location.href = '/'
         			}
+        			    else if(response.v == '400'){
+        			    	document.getElementById('errore').style.display=''
+        			    }
         		}
         		})
         	}

@@ -23,5 +23,8 @@ urlpatterns = [
     path('add-comment/', handlers.add_comment, name='add_comment'),
     path('test/', handlers.test, name='test'),
     path('hosts/', handlers.hosts, name='hosts'),
-    path('create-task/', handlers.create_task, name='create_task')
+    path('create-task/', handlers.create_task, name='create_task'),
+    path('settings/change-password/', ap.change_password, name='change_password'),
+    path('change-password/', handlers.change_password, name='handler_change_password'),
+    path('settings/', ap.get_settings_page, name='settings_page')
 ]

