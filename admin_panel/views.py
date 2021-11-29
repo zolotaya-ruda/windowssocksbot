@@ -325,9 +325,10 @@ class Handlers:
                 elif _bot.is_win10:
                     task_win = 'win10'
 
-                tasks = [task for task in Task.objects.all() if (task.xoc == xoc or
-                task.xoc == 'x32_64') or (task.winos == 'all_win' or task.winos == task_win)]
+                tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
+                task.xoc == 'x32_64') or (task.winos == 'all_win' or task_win in task.winos.split(':'))]
 
+                print(tasks, 'tasks')
                 for task in tasks:
                     _bot.tasks.add(task)
 
