@@ -56,21 +56,7 @@
                 </ul>
             </div>
          
-            <div class="btn-group pull-right theme-container animated tada">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <i class="glyphicon glyphicon-tint"></i><span
-                        class="hidden-sm hidden-xs"> Change Theme </span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="themes">
-
-                    <li><a data-value="slate" href="#"><i class="whitespace"></i> Seriy</a></li>
-                    <li><a data-value="cyborg" href="#"><i class="whitespace"></i> Cherni</a></li>
-              
-                   
-               
-                </ul>
-            </div>
+            
          
 
         
@@ -143,8 +129,8 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     </table>
     <div class="task">
 <div class="inputs">
-<input type="text"  placeholder ="NAME TASK" class="boxi" name="name" id="name"> 
-<input type="text"  placeholder ="Country" class="boxim" name="" id="country">
+<input type="text"  placeholder ="TASK NAME " class="boxi" name="name" id="name" required> 
+<input type="text"  placeholder ="Countries ( * for all )" class="boxim" name="" id="country">
 </div>
 
 
@@ -166,7 +152,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     <input type="checkbox" onclick="document.getElementById('feature1').checked = false; document.getElementById('feature3').checked = false;" id="feature2"/>
     <div>
       <span>
-      reverse shell
+      Reverse Shell
       </span>
     </div>
   </article>
@@ -175,7 +161,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature1').checked = false;" id="feature3"/>
     <div>
       <span>
-       launch socc5.
+       Launch Socks5.
       </span>
     </div>
   </article>
@@ -185,11 +171,11 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
 
     <form>
     
-    <h2 class="nadpis"> WIN OC </h2>
+    <h2 class="nadpis"> OS version </h2>
     
     <div class="checkbox-block">
  <input class="custom-checkbox" id="dget-up-6" type="checkbox" onclick="document.getElementById('get-up-6').checked = false; 
- document.getElementById('make-bed-6').checked = false;  document.getElementById('clean-teeth-6').checked = false; document.getElementById('dress-up-6').checked = false;" value="dget-up-6" name="dget-up-6"/>
+ document.getElementById('make-bed-6').checked = false;  document.getElementById('clean-teeth-6').checked = false; document.getElementById('dress-up-6').checked = false; document.getElementById('win8.1').checked = false;" value="dget-up-6" name="dget-up-6"/>
     <label for="dget-up-6"> <span class="texto">ALL WIN</span></label>
       <!--checkbox 1-->
     <input class="custom-checkbox" id="get-up-6" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="get-up-6" name="get-up-6"/>
@@ -198,6 +184,9 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     <!--checkbox 2-->
     <input class="custom-checkbox" id="make-bed-6" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="make-bed-6" name="make-bed-6"/>
     <label for="make-bed-6"> <span class="texto">WIN8</span></label>
+
+    <input class="custom-checkbox" id="win8.1" onclick="document.getElementById('dget-up-6').checked = false;" type="checkbox" value="win8.1" name="win8.1"/>
+    <label for="win8.1"> <span class="texto">WIN8.1</span></label>
     
     <!--checkbox 3-->
     <input class="custom-checkbox" onclick="document.getElementById('dget-up-6').checked = false;" id="clean-teeth-6" type="checkbox" value="clean-teeth-6" name="clean-teeth-6"/>
@@ -211,7 +200,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
 
 <form>
     
-    <h2 class="nadpis">WIN X OC</h2>
+    <h2 class="nadpis">Architecture</h2>
     
     <div class="checkbox-block">
       
@@ -324,6 +313,7 @@ background-color: red;
         win8 = document.getElementById('make-bed-6').checked
         win10 = document.getElementById('clean-teeth-6').checked
         win11 = document.getElementById('dress-up-6').checked
+        win81 = document.getElementById('win8.1').checked
 
         x32_64 = document.getElementById('get-up-1').checked
         x32 = document.getElementById('make-bed-1').checked
@@ -332,7 +322,7 @@ background-color: red;
         $.ajax({
             url: '/create-task/', 
             type: 'post',
-            data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, x32_64: x32_64, x32: x32, x64: x64},
+            data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, win81: win81, x32_64: x32_64, x32: x32, x64: x64},
             dataType: 'html',
         })
     }

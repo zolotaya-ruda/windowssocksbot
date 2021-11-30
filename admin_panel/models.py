@@ -9,10 +9,13 @@ class Bot(models.Model):
     username = models.CharField(max_length=100)
 
     is_win7 = models.BooleanField(default=False)
-    is_winxp = models.BooleanField(default=False)
+    is_win81 = models.BooleanField(default=False)
     is_win8 = models.BooleanField(default=False)
     is_win10 = models.BooleanField(default=False)
     is_win11 = models.BooleanField(default=False)
+
+    is_server2012 = models.BooleanField(default=False)
+    is_server2012r2 = models.BooleanField(default=False)
 
     is_online = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
@@ -61,6 +64,11 @@ class Task(models.Model):
 
     winos = models.CharField(max_length=100)
     xoc = models.CharField(max_length=50)
+
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
 
 
     objects = models.Manager()
