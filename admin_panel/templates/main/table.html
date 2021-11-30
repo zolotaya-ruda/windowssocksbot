@@ -131,7 +131,7 @@
         <th>IP</th>
 <th>Country</th>
         <th>UID</th>
-        <th>ОС</th>
+        <th>OS</th>
          <th>Arch</th>
         <th>Status</th>
         <th>Additional</th>
@@ -146,15 +146,15 @@
         <td class="center">{{bot.uid}}</td>
         
         {% if bot.is_win7 %}
-        <td class="center">WIN7</td>
+        <td class="center">Windows 7</td>
         {% elif bot.is_win81 %}
-        <td class="center">WIN 8.1</td>
+        <td class="center">Windows 8.1</td>
         {% elif bot.is_win8 %}
-        <td class="center">WIN8</td>
+        <td class="center">Windows 8</td>
         {% elif bot.is_win10 %}
-        <td class="center">WIN10</td>
+        <td class="center">Windows 10</td>
         {% elif bot.is_win11 %}
-        <td class="center">WIN11</td>
+        <td class="center">Windows 11</td>
         {% elif bot.is_server2012 %}
         <td class="center">Windows Server 2012</td>
         {% elif bot.is_server2012r2 %}

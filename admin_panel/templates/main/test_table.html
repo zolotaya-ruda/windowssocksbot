@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% load static %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+	<table>
+		{% for task in tasks %}
+        
+        <tr>
+               <td>{{task.name}}</td>
+            <td class="center">{{task.type1}}</td>
+        <td class="center"><img class="flag" src="/static/table/flags-mini/{{task.country|safe}}.png">  {{task.country}}, {{task.winos}} </td>
+       
+        <td class="center">{{task.done}}</td>
+        <td class="center">{{task.repetitions}}</td>
+       
+        
+    </tr>
+        {% endfor %}    
+	</table>
+	<script src="{% static 'table/bower_components/jquery/jquery.min.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+	<script src="{% static 'table/js/charisma.js' %}"></script>
+
+</body>
+</html>

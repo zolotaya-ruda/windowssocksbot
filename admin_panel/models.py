@@ -67,6 +67,8 @@ class Task(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
 
+    completed = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['-date']
 
