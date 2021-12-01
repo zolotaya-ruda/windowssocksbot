@@ -27,5 +27,9 @@ urlpatterns = [
     path('create-task/', handlers.create_task, name='create_task'),
     path('settings/change-password/', ap.change_password, name='change_password'),
     path('change-password/', handlers.change_password, name='handler_change_password'),
-    path('settings/', ap.get_settings_page, name='settings_page')
+    path('settings/', ap.get_settings_page, name='settings_page'),
+    path('change-ip-backconnect/', handlers.change_ip_backconnect, name='change_ip_backconnect'),
+    path('personal-task/', ap.get_personal_task, name='personal_task'),
+    path('create-personal-task/', handlers.create_personal_task, name='create-personal-task'),
+    path('remove-task/', handlers.remove_task, name='remove_task')
 ]

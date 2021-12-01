@@ -125,8 +125,8 @@ glyphicon glyphicon-cog red"></i>Settings  <a href="{% url 'change_password' %}"
     <div class="box-content">
   
 
-<input type="text"  placeholder =" IP BackConnect" class="boxi" name="" id="search">  
-            <a class="btn btn-romus" href="#">
+<input type="text"  placeholder =" IP BackConnect" class="boxi" name="" id="ip">  
+            <a class="btn btn-romus" onclick="change_ip_backconnect(); return false;" href="#">
                 <i class="
 glyphicon glyphicon-floppy-disk icon-white"></i>
                 Save
@@ -192,6 +192,19 @@ background-color: red;
                 }
             }
 
+        })
+    }
+
+    function change_ip_backconnect() {
+        _data = document.getElementById('ip').value
+        $.ajax({
+            url: '/change-ip-backconnect/',
+            data: {data: _data},
+            dataType: 'html',
+            type: 'post',
+            success: function(){
+                window.location.href = '/settings/'
+            }
         })
     }
 

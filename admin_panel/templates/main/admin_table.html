@@ -142,13 +142,14 @@ glyphicon glyphicon-edit icon-white"></i>
          <th>Completed bots</th>
         <th>Need bots</th>
         <th>Status</th>
+        <th>Functions</th>
     
 
     </tr>
     </thead>
         {% for task in tasks %}
         
-        <tr>
+        <tr id="tr-{{task.id}}">
                <td>{{task.name}}</td>
             <td class="center">{{task.type1}}</td>
         <td class="center"><img class="flag" src="/static/table/flags-mini/{{task.country|safe}}.png">  {{task.country}}, {{task.winos}} </td>
@@ -161,9 +162,15 @@ glyphicon glyphicon-edit icon-white"></i>
         </td>
         {% else %}
         <td class="center">
-            <span class="label-success label label-default">NOT COMPLETED</span>
+            <span class="label-success label label-default">COMPLETED</span>
         </td>
         {% endif %}
+        <td>
+        <a class="btn btn-danger" id="{{task.id}}" onclick="delete_task({{task.id}}); return false;" href="#">
+                <i class="glyphicon glyphicon-trash icon-white"></i>
+                Delete
+
+            </a></td>
 
     </tr>
         {% endfor %}
@@ -221,6 +228,26 @@ background-color: red;
         })
     }
 
+
+    function delete_task(_id) {
+        el = document.getElementById('tr-' + _id)
+
+        $.ajax({
+            url: '/remove-task/',
+            type: 'post',
+            data: {id: _id},
+            dataType: 'html',
+            success: function(data){
+                const json = data
+                const response = JSON.parse(json)
+                if (response.v == '200') {
+                    el.remove()
+                }
+            }
+        })
+
+        
+    }
 
   </script>
 

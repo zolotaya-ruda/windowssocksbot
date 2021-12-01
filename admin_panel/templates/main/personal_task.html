@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>SocksBot - Personal Task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Adminka">
+
+
+    
+    <link id="bs-css" href="{% static 'task/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'task/css/bootstrap-slate.min.css' %}">
+    <link href="{% static 'task/css/charisma-app.css' %}" rel="stylesheet">
+    <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.css" %}' rel='stylesheet'>
+    <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.print.css" %}' rel='stylesheet' media='print'>
+    <link href='{% static "task/bower_components/chosen/chosen.min.css' rel='stylesheet" %}'>
+    <link href='{% static "task/bower_components/colorbox/example3/colorbox.css" %}' rel='stylesheet'>
+    <link href='{% static "task/bower_components/responsive-tables/responsive-tables.css" %}' rel='stylesheet'>
+    <link href='{% static "task/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/jquery.noty.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/noty_theme_default.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/elfinder.min.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/elfinder.theme.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/jquery.iphone.toggle.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/uploadify.css" %}' rel='stylesheet'>
+    <link href='{% static "task/css/animate.min.css" %}' rel='stylesheet'>
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="{% static 'task/bower_components/jquery/jquery.min.js' %}"></script>
+   
+
+   
+ 
+
+</head>
+
+<body>
+ 
+    <div class="navbar navbar-default" role="navigation">
+
+        <div class="navbar-inner">
+            <button type="button" class="navbar-toggle pull-left animated flip">
+                <span class="sr-only">Toggle navigation</span>
+               
+            </button>
+         
+
+            <div class="btn-group pull-right">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> admin</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                
+                    <li class="divider"></li>
+                    <li><a onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+         
+
+        
+
+        </div>
+    </div>
+ 
+<div class="ch-container">
+    <div class="row">
+        
+        
+        <div class="col-sm-2 col-lg-2">
+            <div class="sidebar-nav">
+                <div class="nav-canvas">
+                    <div class="nav-sm nav nav-stacked">
+
+                    </div>
+                   <ul class="nav nav-pills nav-stacked main-menu">
+                        <li class="nav-header">Main</li>
+                        <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
+                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
+                        </li>
+                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
+                                    <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-home"></i><span> Settings</span></a>
+                                    </li>
+                        
+                </div>
+            </div>
+        </div>
+        </noscript>
+
+        <div id="content" class="col-lg-10 col-sm-10">
+          
+            <div>
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li>
+            <a href="#">Personal Task</a>
+        </li>
+    </ul>
+</div>
+ <div class="row">
+    <div class="box col-md-12">
+    <div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="glyphicon glyphicon-edit icon-white"></i>Personal Task</h2>
+
+   
+    </div>
+    <div class="box-content">
+ 
+
+ 
+    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+    <thead>
+    <tr>
+   
+    
+     
+    
+    </tbody>
+    </table>
+    <div class="task">
+<div class="inputs">
+<input type="text"  placeholder ="Task name" class="boxi" name="" id="name"> 
+
+</div>
+
+
+
+<div class="cheesers">
+
+   <div class="cheks">
+      <article class="feature1">
+    <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature3').checked = false;" id="feature1"/>
+    <div>
+      <span>
+       FTP
+       
+      </span>
+    </div>
+  </article>
+  
+  <article class="feature2">
+    <input type="checkbox" onclick="document.getElementById('feature1').checked = false; document.getElementById('feature3').checked = false;" id="feature2"/>
+    <div>
+      <span>
+      Reverse Shell
+      </span>
+    </div>
+  </article>
+  
+  <article class="feature3">
+    <input type="checkbox" onclick="document.getElementById('feature2').checked = false; document.getElementById('feature1').checked = false;" id="feature3"/>
+    <div>
+      <span>
+       Socks 5
+      </span>
+    </div>
+  </article>
+  </div>
+</div>
+<div class="forms">
+
+
+    
+   
+  </form>
+  
+  <!-- checkbox #2 form -->
+  
+  
+  <!-- checkbox #6 form -->
+
+
+
+
+</div>
+
+
+
+<div class="posledn">
+
+<form class="gehueus" onsubmit="return false;">
+           
+               
+          
+       
+  
+ 
+  <button class ="button-hover">
+      <span onclick="create_task(); return false;">Apply </span>
+    </button>
+</div>
+</div>
+ </form>
+    </div>
+
+    <style type="text/css">
+
+.erro{
+background-color: #1f1f1f;
+width: 390px;
+margin-left: 33%;
+border-radius: 7px;
+border: 2px solid #b51f28;
+
+}
+.baton{
+background-color: #1f1f1f;
+outline: none;box-shadow: none;
+color: #939393;
+font-size: 14px;
+margin-left:95%;
+font-family: 'Manrope', sans-serif;
+}
+.textus{
+  font-size: 16px;
+      padding: 0px 4px 11px 1px;
+  color: #b9b9b9;
+  text-align: center;
+  font-family: 'Manrope', sans-serif;
+}
+
+@media only screen and (max-width: 1032px) {
+.erro{
+
+margin-left: 42%;
+}
+.textues{
+font-size: 11px;
+color:#bababa;
+}
+ }
+</style>
+
+    <div id="errore-input" class="erro" style="display: none;"><a class="baton"  onclick="(document.getElementById('errore-input').style.display='none')">x</a>
+    <p class="textus"> The input value should not be empty.</p>
+</div>
+
+    </div>
+
+    </div>
+    <!--/span-->
+
+    </div><!--/row-->
+
+    
+<style type="text/css">
+    .rfjd{
+background-color: red;
+    }
+</style>
+
+
+<script src="{% static 'task/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'task/js/jquery.cookie.js' %}"></script>
+<script src="{% static 'task/bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'task/bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'task/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'task/bower_components/chosen/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'task/bower_components/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'task/js/jquery.noty.js' %}"></script>
+<script src="{% static 'task/bower_components/responsive-tables/responsive-tables.js' %}"></script>
+<script src="{% static 'task/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js' %}"></script>
+<script src="{% static 'task/js/jquery.raty.min.js' %}"></script>
+<script src="{% static 'task/js/jquery.iphone.toggle.js' %}"></script>
+<script src="{% static 'task/js/jquery.autogrow-textarea.js' %}"></script>
+<script src="{% static 'task/js/jquery.uploadify-3.1.min.js' %}"></script>
+<script src="{% static 'task/js/jquery.history.js' %}"></script>
+<script src="{% static 'task/js/charisma.js' %}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+
+<script type="text/javascript">
+    function create_task() {
+        name = document.getElementById('name').value
+
+        ftp = document.getElementById('feature1').checked
+        shell = document.getElementById('feature2').checked
+        socks = document.getElementById('feature3').checked
+
+        if (name == '' || (ftp == false && shell == false && socks == false)) {
+            document.getElementById('errore-input').style.display = ''
+            return
+        }
+
+        if (ftp == true){
+            _type = 'ftp'
+        } else if (shell == true){
+            _type = 'shell'
+        } else if (socks == true){
+            _type = 'socks'
+        }
+
+        $.ajax({
+            url: '/create-personal-task/',
+            data: {name: name, type: _type, uid: {{uid}} },
+            dataType: 'html',
+            type: 'post',
+            success: function(data){
+                const json = data
+                const response = JSON.parse(json);
+                if (response.v == '200') {
+                    window.location.href = '/admin-panel/'
+                }
+            }
+        })
+
+    }
+
+     function logout() {
+        $.ajax({
+            url: '/logout/',
+            type: 'get',
+            data: {},
+            dataType: 'html',
+            success: function(data){
+                const json = data
+                const response = JSON.parse(json);
+                if (response.v == '200') {
+                    window.location.href = '/login/'
+                }
+            }
+
+        })
+    }
+</script>
+
+<script type="text/javascript">
+   var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
+        datasets: [{
+            data: [27.92, 17.53, 14.94, 26.62, 12.99],
+            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
+            borderWidth: 0.5 ,
+            borderColor: '#ddd'
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Recommended Daily Diet',
+            position: 'top',
+            fontSize: 16,
+            fontColor: '#111',
+            padding: 20
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                boxWidth: 20,
+                fontColor: '#111',
+                padding: 15
+            }
+        },
+        tooltips: {
+            enabled: false
+        },
+        plugins: {
+            datalabels: {
+                color: '#111',
+                textAlign: 'center',
+                font: {
+                    lineHeight: 1.6
+                },
+                formatter: function(value, ctx) {
+                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value ;
+                }
+            }
+        }
+    }
+});
+
+      
+    </script>
+   <script type="text/javascript">// Получение ссылки на элемент canvas в DOM
+const $grafica = document.querySelector("#grafica");
+// Tags - это метки, которые идут по оси X.  
+const tags = ["32x", "64x"]
+// У нас может быть несколько наборов данных. Давайте начнем с одного
+const dataSales2020 = {
+    label: "X OC",
+    data: [10,14], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
+    backgroundColor: 'rgba(164, 67, 162, 0.2)', // Цвет фона
+    borderColor: 'rgba(222, 11, 218, 1)', // Цвет границ
+    borderWidth: 1,// Толщина границ
+};
+new Chart($grafica, {
+    type: 'bar',// Тип графики - изменяем тип здесь.
+    data: {
+        labels: tags,
+        datasets: [
+            dataSales2020,
+            // Больше данных ...
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+});</script>
+</body>
+</html>
