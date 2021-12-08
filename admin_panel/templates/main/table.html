@@ -152,13 +152,13 @@
         {% elif bot.is_win8 %}
         <td class="center">Windows 8</td>
         {% elif bot.is_win10 %}
-        <td class="center">Windows 10</td>
-        {% elif bot.is_win11 %}
-        <td class="center">Windows 11</td>
+        <td class="center">Windows 10/11</td>
         {% elif bot.is_server2012 %}
         <td class="center">Windows Server 2012</td>
         {% elif bot.is_server2012r2 %}
         <td class="center">Windows Server 2012 R2</td>
+        {% elif bot.is_server2016_19 %}
+        <td class="center">Windows Server 2016/2019</td>
         {% endif %}
 
         {% if bot.is_x64 %}

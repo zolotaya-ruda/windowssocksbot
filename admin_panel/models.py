@@ -17,6 +17,8 @@ class Bot(models.Model):
     is_server2012 = models.BooleanField(default=False)
     is_server2012r2 = models.BooleanField(default=False)
 
+    is_server2016_19 = models.BooleanField(default=False)
+
     is_online = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
 
