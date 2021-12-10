@@ -245,10 +245,10 @@
 var myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-        labels: ['Win7', 'Win8.1', 'Win8', 'Win10', 'Win11'],
+        labels: ['Win7', 'Win8.1', 'Win8', 'Win10/11', 'Windows Server 2016/2019', 'Windows Server 2012', 'Windows Server 2012r2'],
         datasets: [{
             data: {{win_version}},
-            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700'],
+            backgroundColor: ['#b31a4e', '#00ae59', '#dc3906', '#0a599f', '#dbb700', '#8A2BE2', '#7FFFD4'],
             borderWidth: 0.5 ,
             borderColor: '#ddd',
         }]
@@ -297,7 +297,7 @@ const $grafica = document.querySelector("#grafica");
 const tags = ["32x", "64x"]
 
 const dataSales2020 = {
-    label: "X OC",
+    label: "X OS",
     data: {{x_oc}}, 
     backgroundColor: 'rgba(164, 67, 162, 0.2)', 
     borderColor: 'rgba(222, 11, 218, 1)', 

