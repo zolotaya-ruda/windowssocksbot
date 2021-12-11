@@ -88,11 +88,11 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
-                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
+                            <li><a class="ajax-link" ><i class="glyphicon glyphicon-user"></i><span> Bots</span></a>
+                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-edit"></i><span> Tasks</span></a>
                         </li>
-                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
-                                    <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-home"></i><span> Settings</span></a>
+                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-time"></i><span> Sessions </span></a>
+                                    <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-cog"></i><span> Settings</span></a>
                                     </li>
                         
                 </div>
@@ -105,7 +105,7 @@
             <div>
     <ul class="breadcrumb">
         <li>
-            <a href="#">Home</a>
+            <a href="{% url 'main_page' %}">Home</a>
         </li>
         <li>
             <a href="#">Bots</a>
@@ -122,10 +122,11 @@
     </div>
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
-
-<input type="text"  placeholder ="Search" class="boxi" name="" id="search">
+<form onsubmit="search(this); return false">
+<input type="text" placeholder ="Search" class="boxi" name="" id="q">
+</form>
     </div>
-    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+    <table id='table' class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
     <tr>
         <th>IP</th>
@@ -138,9 +139,9 @@
 
     </tr>
     </thead>
-    <tbody>
+    <tbody id='tbody'>
     {% for bot in bots %}
-    <tr>
+    <tr id='tr'>
         <td>{{bot.ip}}</td>
             <td class="center"><img class="flag" src="/static/table/flags-mini/{{bot.country|safe}}.png"> {{bot.country}}</td>
         <td class="center">{{bot.uid}}</td>
@@ -217,6 +218,13 @@ glyphicon glyphicon-send icon-white"></i>
 
     {% endfor %}
     
+    <style type="text/css">
+        .boxi:focus{
+    border: 2px solid #4e8bf5;   
+    transition: 0.2s;
+}
+    </style>
+
     </tbody>
     </table>
     </div>
@@ -253,6 +261,95 @@ background-color: red;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
 <script type="text/javascript">
+    function search(el) {
+        q = document.getElementById('q').value
+        $.ajax({
+            url: '/search/',
+            type: 'post',
+            data: {q: q},
+            dataType: 'html',
+            success: function(data){
+                const json = data
+                const response = JSON.parse(json);
+
+                console.log(response)
+
+                document.getElementById('tbody').innerHTML = ''
+
+                var tbody = document.getElementById('tbody')
+
+                response.forEach(function(item, i, arr){
+                    console.log(item[0])
+
+                    if (item[6] == false) {
+                        is_banned = `<span class="label-success label label-default" id='sp-${item[2]}'>Active</span>`
+                        is_banned_btn = `<a class="btn btn-danger" onclick="block_unblock(this); return false;" type="block" id=${item[2]} href="#">
+                <i class="glyphicon glyphicon-trash icon-white" id='i-${item[2]}'></i>Block 
+            </a>`
+                    } else {
+                        is_banned = `<span class="label-default label label-danger" id='sp-${item[2]}'>Banned</span>`
+                        is_banned_btn = `<a class="btn grenocol" onclick="block_unblock(this); return false;" type="unblock" id='${item[2]}' href="#">
+                <i class="label-success label label-default" id="i-${item[2]}"></i>Unblock 
+            </a>`
+                    }
+
+                    if (item[5] == false) {
+                        is_online = `<span class="label-success label label-brous">Ofline</span>`
+                    } else {
+                        is_online = `<span class="label-success label label-default">Online</span>`
+                    }
+
+                    tbody.innerHTML += `<tr id='tr'>
+        <td>${item[0]}</td>
+            <td class="center"><img class="flag" src="/static/table/flags-mini/${item[1]}.png"> ${item[1]}</td>
+        <td class="center">${item[2]}</td>
+        
+
+        <td class="center">${item[3]}</td>
+
+
+        <td class="center">${item[4]}</td>
+        
+
+        <td class="center">
+            
+            ${is_banned}
+
+            ${is_online}
+
+        </td>
+        <style type="text/css">
+            .grenocol{
+background-color:#469146;
+color: white;
+}
+        </style>
+        <td class="center">
+            <a class="btn btn-info" href="{% url 'personal_task' %}?uid=${item[2]}">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+               Task
+            </a>
+            
+            ${is_banned_btn}
+
+                
+                <input type="text"  placeholder ="${item[7]}" class="boxir" id="comment${item[2]}" id1="search">
+                
+                <a id=${item[2]} onclick="add_comment(this);" class="btn btn-romus" href="#">
+                
+                <i class="
+glyphicon glyphicon-send icon-white"></i>
+                comment
+            </a>
+        </td>
+    </tr> `
+                })
+
+            }
+        })
+    }
+
+
     function add_comment(el) {
         uid = el.id
         elem = document.getElementById('comment' + uid).value

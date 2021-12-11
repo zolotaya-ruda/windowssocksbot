@@ -89,11 +89,11 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" ><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
-                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
-                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-user"></i><span> Bots</span></a>
+                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-time"></i><span> Sessions </span></a>
+                                    <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-edit"></i><span> Tasks</span></a>
                         </li>
-                        <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-home"></i><span> Settings</span></a>
+                        <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-cog"></i><span> Settings</span></a>
                                     </li>
                         
                 </div>
@@ -107,9 +107,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="#">Home</a>
-        </li>
-        <li>
-            <a href="#">Main</a>
         </li>
     </ul>
 </div>
@@ -297,7 +294,7 @@ const $grafica = document.querySelector("#grafica");
 const tags = ["32x", "64x"]
 
 const dataSales2020 = {
-    label: "X OS",
+    label: "OS Architecture",
     data: {{x_oc}}, 
     backgroundColor: 'rgba(164, 67, 162, 0.2)', 
     borderColor: 'rgba(222, 11, 218, 1)', 

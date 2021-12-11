@@ -87,13 +87,13 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
-                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
-                                <li><a class="ajax-link"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-user"></i><span> Bots</span></a>
+                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-edit"></i><span> Tasks</span></a>
+                                <li><a class="ajax-link"><i class="glyphicon glyphicon-time"></i><span> Sessions </span></a>
                                 
                                 
                         </li>
-                        <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-home"></i><span> Settings</span></a>
+                        <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-cog"></i><span> Settings</span></a>
                                     </li>
                 </div>
             </div>
@@ -105,7 +105,7 @@
             <div>
     <ul class="breadcrumb">
         <li>
-            <a href="#">Home</a>
+            <a href="{% url 'main_page' %}">Home</a>
         </li>
         <li>
             <a href="#">Sessions</a>
@@ -116,14 +116,15 @@
     <div class="box col-md-12">
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-user"></i>Sessions</h2>
+        <h2><i class="glyphicon glyphicon-time"></i>Sessions</h2>
 
    
     </div>
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
-
-<input type="text"  placeholder ="Search" class="boxi" name="" id="search">
+<form onsubmit="search_session(this); return false;">
+<input type="text"  placeholder ="Search" class="boxi" name="" id="q">
+</form>
     </div>
     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
@@ -136,7 +137,7 @@
 <th>Stop</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id='tbody'>
     {% for session in sessions %}
     <tr id="tr-{{session.uid}}">
         <td>{{session.uid}}</td>
@@ -154,7 +155,7 @@
         
         </td>
         <td class="center">
-            <a class="btn btn-success" onclick="stop(this); return false;" id="{{session.uid}}" href="#">
+            <a class="btn btn-success" onclick="stop(this, {{session.type1}}); return false;" id="{{session.uid}}" href="#">
                 <i class="glyphicon glyphicon-remove"></i>
                Stop connection
             </a>
@@ -200,6 +201,54 @@ background-color: red;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
 <script type="text/javascript">
+        function search_session(argument) {
+            q = document.getElementById('q').value
+
+            $.ajax({
+                url: '/search-session/',
+                type: 'post',
+                data: {q: q},
+                dataType: 'html',
+                success: function(data){
+                    const json = data
+                    const response = JSON.parse(json);
+                    document.getElementById('tbody').innerHTML = ''
+
+                    var table = document.getElementById('tbody')
+
+                    
+
+                    response.forEach(function(item, i, arr){
+                        if (item[3] == true) {
+                            active = `<span class="label-success label label-default">active</span>`
+                        } else {
+                            active = `<span class="label-success label label-brous">inactive</span>`
+                        }
+
+                        table.innerHTML += `<tr id="tr-${item[0]}">
+        <td>${item[0]}</td>
+            <td class="center"> ${item[1]}</td>
+        <td class="center">${item[2]}</td>
+      
+        </td>
+
+          <td class="center">
+            ${active}
+        
+        </td>
+        <td class="center">
+            <a class="btn btn-success" onclick="stop(this, ${item[4]}); return false;" id="${item[0]}" href="#">
+                <i class="glyphicon glyphicon-remove"></i>
+               Stop connection
+            </a>
+           
+        </td>
+    </tr>`
+                    })
+                }
+            })
+        }
+
         function logout() {
         $.ajax({
             url: '/logout/',
@@ -218,9 +267,10 @@ background-color: red;
     }
 
 
-    function stop(argument) {
+    function stop(argument, session_type) {
         _id = argument.id
-
+        _type = session_type
+        console.log(_type)
         var el = document.getElementById('tr-' + _id)
         console.log('tr-' + _id)
         el.parentNode.removeChild(el);
@@ -229,7 +279,7 @@ background-color: red;
         $.ajax({
             url: '/stop-conn/',
             type: 'post',
-            data: {_id},
+            data: {uid:_id, type: _type},
             dataType: 'html',
 
         })

@@ -77,11 +77,12 @@
                    <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Main</li>
                         <li><a class="ajax-link" href="{% url 'main_page' %}"><i class="glyphicon glyphicon-home"></i><span> Main Page</span></a>
-                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-home"></i><span> Bots</span></a>
-                                <li><a class="ajax-link" href="{% url 'admin_table' %}"><i class="glyphicon glyphicon-home"></i><span> Tasks</span></a>
+                            <li><a class="ajax-link" href="{% url 'table_page' %}"><i class="glyphicon glyphicon-user"></i><span> Bots</span></a>
+                                <li><a class="ajax-link"><i class="glyphicon glyphicon-edit"></i><span> Tasks</span></a>
                         </li>
-                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-home"></i><span> Sessions </span></a>
-                                    <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-home"></i><span> Settings</span></a>
+                                <li><a class="ajax-link" href="{% url 'sessions_page' %}"><i class="glyphicon glyphicon-time"></i><span> Sessions</span></a>
+                                    </li>
+                                    <li><a class="ajax-link" href="{% url 'settings_page' %}"><i class="glyphicon glyphicon-cog"></i><span> Settings</span></a>
                                     </li>
                         
                 </div>
@@ -94,10 +95,13 @@
             <div>
     <ul class="breadcrumb">
         <li>
-            <a href="#">Home</a>
+            <a href="{% url 'main_page' %}">Home</a>
         </li>
         <li>
-            <a href="#">Personal Task</a>
+            <a href="{% url 'admin_table' %}">Task</a>
+        </li>
+        <li>
+            <a href="#">Personal task</a>
         </li>
     </ul>
 </div>
@@ -242,7 +246,7 @@ color:#bababa;
     margin-left: 24.2%;
 }
 
- 
+
 </style>
 
     <div id="errore-input" class="erro" style="display: none;"><a class="baton"  onclick="(document.getElementById('errore-input').style.display='none')">x</a>
