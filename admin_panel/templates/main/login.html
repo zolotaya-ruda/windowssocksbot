@@ -15,15 +15,15 @@
     <div id="login">
         <form onsubmit="log(this); return false;">
             	{% csrf_token %}
-                <p><span class="fontawesome-user"></span><input type="text" name="login" onBlur="if(this.value == '') this.value = 'Username'" onFocus="if(this.value == 'Username') this.value = ''" value="Username"></p> 
-                <p><span class="fontawesome-lock"></span><input type="password" name="password" onBlur="if(this.value == '') this.value = 'Пароль'" onFocus="if(this.value == 'Пароль') this.value = ''" value="Пароль"></p> 
+                <p><input type="text" name="login" onBlur="if(this.value == '') this.value = 'Username'" onFocus="if(this.value == 'Username') this.value = ''" value="Username"></p> 
+                <p><input type="password" name="password" onBlur="if(this.value == '') this.value = 'Пароль'" onFocus="if(this.value == 'Пароль') this.value = ''" value="Пароль"></p> 
                 <p><input type="submit" value="LOGIN"></p>
 
         </form>
 
         <div id="errore" style='display: none;' class="erro"><a class="baton" onclick="document.getElementById('errore').style.display='none'">x</a>
 
-    		<p class="textus"> invalid password or username, try to enter it again.</p>
+    		<p class="textus"> Invalid password or username, try to enter it again.</p>
 		</div>
 
         <script type="text/javascript">

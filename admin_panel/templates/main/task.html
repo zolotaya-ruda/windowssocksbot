@@ -10,8 +10,8 @@
 
     
     <link id="bs-css" href="{% static 'task/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'task/css/bootstrap-slate.min.css' %}">
-    <link href="{% static 'task/css/charisma-app.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'table/css/bootstrap-slate.min.css' %}">
+    <link href="{% static 'table/css/charisma-app.css' %}" rel="stylesheet">
     <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.css" %}' rel='stylesheet'>
     <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.print.css" %}' rel='stylesheet' media='print'>
     <link href='{% static "task/bower_components/chosen/chosen.min.css' rel='stylesheet" %}'>
@@ -109,7 +109,7 @@
     <div class="box col-md-12">
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-edit icon-white"></i>Task</h2>
+        <h2><i class="glyphicon glyphicon-edit icon-white"></i>  New Task</h2>
 
    
     </div>
@@ -118,7 +118,7 @@
 
                 <i class="
 glyphicon glyphicon-question-sign red"></i> <span class="textus">
-                specify the name of the task and geolocation, optionally select a criterion, a specific oc and oc architecture, specify the number of repetitions and click "create".</span>
+                Specify the name of the task and geolocation, optionally select a criterion, a specific oc and oc architecture, specify the number of repetitions and click "create".</span>
             </a>
     </div>
  
@@ -186,6 +186,7 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     document.getElementById('make-bed-6').checked = false;
     document.getElementById('clean-teeth-6').checked = false;
     document.getElementById('get-up-1').checked = false;
+    document.getElementById('dget-up-7').checked = false;
 
     document.getElementById('get-up-h1').checked = false;
     document.getElementById('make-bedros-1').checked = false;
@@ -278,21 +279,6 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
 
   </form>
 
-<style type="text/css">
-    .texto{
- color:#898989;
- font-size: 13px;
-}
-
-
-.posledn {
-    margin-left: 12.6%;
-}.gehueus {
-    display: inline-block;
-    margin-left: 24.2%;
-}
-
-</style>
 
 <form>
     
@@ -307,6 +293,24 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
  "
       id="make-bedros-1" type="checkbox" value="make-bedros-1" name="make-bedros-1"/>
     <label for="make-bedros-1"> <span class="texto">Windows Server 2012 </span></label>
+
+      
+    </div>
+
+  </form>
+  <form>
+    
+  
+    
+    <div class="checkbox-block">
+
+
+  <input class="custom-checkbox" onclick="    
+
+    document.getElementById('dget-up-6').checked = false;
+ "
+      id="dget-up-7" type="checkbox" value="make-bedros-1" name="make-bedros-1"/>
+    <label for="dget-up-7"> <span class="texto">Windows Server 2012 R2 </span></label>
 
       
     </div>
@@ -337,44 +341,10 @@ glyphicon glyphicon-question-sign red"></i> <span class="textus">
     </div>
   </form>
 
-<style type="text/css">
-
-.erro{
-background-color: #1f1f1f;
-width: 390px;
-
-border-radius: 7px;
-border: 2px solid #b51f28;
-
-}
-.baton{
-background-color: #1f1f1f;
-outline: none;box-shadow: none;
-color: #939393;
-font-size: 14px;
-margin-left:95%;
-font-family: 'Manrope', sans-serif;
-}
-.textus{
-  font-size: 16px;
-      padding: 0px 4px 11px 1px;
-  color: #b9b9b9;
-  text-align: center;
-  font-family: 'Manrope', sans-serif;
-}
-
-@media only screen and (max-width: 1032px) {
-
-.textues{
-font-size: 11px;
-color:#bababa;
-}
- }
-</style>
 
 <div class="task">
         <div id="errore-input" class="erro" style="display: none;"><a class="baton"  onclick="(document.getElementById('errore-input').style.display='none')">x</a>
-    <p class="textus"> The input value should not be empty.</p>
+    <p class="textus" id="error_text"> The input value should not be empty.</p>
 </div>
 
 <div class="posledn">
@@ -382,7 +352,7 @@ color:#bababa;
 <form class="gehueu">
             <p>
                 <label for="age"> Repetitions: </label>
-                <input onkeypress='validate(event)' class="dobus" type="number" step="1" min="1" max="10010" value="1" id="age" name="age"/>
+                <input class="dobus" type="text" step="1" min="1" max="10010" value="1" id="age" name="age"/>
             </p>
           
         </form>
@@ -403,6 +373,33 @@ color:#bababa;
 
     </div><!--/row-->
 
+<style type="text/css">
+    .dobus{
+        padding-right: 5px;  padding-left: 5px;
+        width: 94px;
+    }
+    .posledn {
+            margin-left: 8%;
+    }
+
+    .erro {
+    background-color: #1f1f1f;
+    width: 390
+px
+;
+    margin-left: 0%;
+    border-radius: 7
+px
+;
+    border: 2
+px
+ solid #b51f28;
+ margin-top: 20px;
+  margin-bottom: 20px;
+
+
+}
+</style>
     
 <style type="text/css">
     .rfjd{
@@ -461,12 +458,15 @@ background-color: red;
 
         serv2016_19 = document.getElementById('get-up-h1').checked
         serv2012 = document.getElementById('make-bedros-1').checked
+        serv2012r2 = document.getElementById('dget-up-7').checked
+
+        console.log(serv2012r2)
 
         x32_64 = document.getElementById('get-up-11').checked
         x32 = document.getElementById('make-bed-11').checked
         x64 = document.getElementById('clean-teeth-11').checked
 
-        if (name == '' || country == '' || all_win == false && (win7 == false && win8 == false && win81 == false && win10 == false && serv2012 == false && serv2016_19 == false) || x32_64 == false && (x32 == false && x64 == false) || (ftp == false && shell == false && sock == false) || (all_win == false && serv2012 == false && serv2016_19 == false && win7 == false && win8 == false && win81 == false && win10 == false)) {
+        if (name == '' || country == '' || (ftp == false && shell == false && sock == false) || (all_win == false && serv2012 == false && serv2016_19 == false && win7 == false && win8 == false && win81 == false && win10 == false && serv2012r2 == false)) {
             document.getElementById('errore-input').style.display = ''
             return
         }
@@ -475,7 +475,7 @@ background-color: red;
         $.ajax({
             url: '/create-task/', 
             type: 'post',
-            data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10_11: win10,  win81: win81, x32_64: x32_64, x32: x32, x64: x64, serv2016_19: serv2016_19, serv2012: serv2012},
+            data: {reps: reps, type: _type, name: name, country: country, all_win: all_win, win7: win7, win8: win8, win10_11: win10,  win81: win81, x32_64: x32_64, x32: x32, x64: x64, serv2016_19: serv2016_19, serv2012: serv2012, serv2012r2: serv2012r2},
             dataType: 'html',
             success: function(data){
                 window.location.href = '/tasks/'
@@ -483,16 +483,35 @@ background-color: red;
         })
     }
 
-    function validate(evt) {
-  var theEvent = evt || window.event;
-  var key = theEvent.keyCode || theEvent.which;
-  key = String.fromCharCode( key );
-  var regex = /[0-9]|\./;
-  if( !regex.test(key) ) {
-    theEvent.returnValue = false;
-    if(theEvent.preventDefault) theEvent.preventDefault();
-  }
+
+$('.dobus').on("input",function(ev){
+
+    el = document.getElementById('age')
+    var symbs = el.value.split('')
+
+    flag = false
+
+    if (symbs[0] == '0') {
+        el.value = ''
+    }
+
+    symbs.forEach(function(item, i, symbs){
+                    if (flag == false && (testStr(item) == true || item == '-'  || item == ' ')) {
+                        el.value = symbs.slice(0, i).join('')
+                        flag = true;
+                    }
+                })
+
+
+
+});
+
+function testStr(str)
+{
+    if ( !/^[a-zA-ZА-яЁё!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?.`~]+$/.test(str) ) return false;
+    return true;
 }
+
 
     function logout() {
         $.ajax({
@@ -514,7 +533,7 @@ background-color: red;
    var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'doughnut',
-    data: {
+    data: { 
         labels: ['Win7', 'Winxp', 'Win8', 'Win10', 'Win11'],
         datasets: [{
             data: [27.92, 17.53, 14.94, 26.62, 12.99],

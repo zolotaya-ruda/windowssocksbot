@@ -10,8 +10,8 @@
 
     
     <link id="bs-css" href="{% static 'task/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'task/css/bootstrap-slate.min.css' %}">
-    <link href="{% static 'task/css/charisma-app.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'table/css/bootstrap-slate.min.css' %}">
+    <link href="{% static 'table/css/charisma-app.css' %}" rel="stylesheet">
     <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.css" %}' rel='stylesheet'>
     <link href='{% static "task/bower_components/fullcalendar/dist/fullcalendar.print.css" %}' rel='stylesheet' media='print'>
     <link href='{% static "task/bower_components/chosen/chosen.min.css' rel='stylesheet" %}'>
@@ -302,23 +302,24 @@ background-color: red;
         }
 
         if (ftp == true){
-            _type = 'ftp'
+            _type = 'FTP'
         } else if (shell == true){
-            _type = 'shell'
+            _type = 'Reverse shell'
         } else if (socks == true){
-            _type = 'socks'
+            _type = 'Socks'
         }
+
 
         $.ajax({
             url: '/create-personal-task/',
-            data: {name: name, type: _type, uid: {{uid}} },
+            data: {name: name, type: _type, uid: `{{uid}}` },
             dataType: 'html',
             type: 'post',
             success: function(data){
                 const json = data
                 const response = JSON.parse(json);
                 if (response.v == '200') {
-                    window.location.href = '/admin-panel/'
+                    window.location.href = '/tasks/'
                 }
             }
         })

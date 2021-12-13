@@ -10,8 +10,8 @@
 
     
         <link id="bs-css" type="text/css" href="{% static 'main_page/css/bootstrap-cyborg.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'main_page/css/bootstrap-Slate.min.css' %}">
-    <link href="{% static 'settings/css/charisma-app.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'table/css/bootstrap-slate.min.css' %}">
+    <link href="{% static 'table/css/charisma-app.css' %}" rel="stylesheet">
     <link href="{% static 'main_page/bower_components/fullcalendar/dist/fullcalendar.css' %}" rel='stylesheet'>
     <link href="{% static 'main_page/bower_components/fullcalendar/dist/fullcalendar.print.css' %}" rel='stylesheet' media='print'>
     <link href="{% static 'main_page/bower_components/chosen/chosen.min.css' %}" rel='stylesheet'>
@@ -118,28 +118,70 @@
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
         <h2><i class="
-glyphicon glyphicon-cog red"></i>Settings  <a href="{% url 'change_password' %}">Change password</a></h2>
+glyphicon glyphicon-cog"></i> Settings  </h2>
 
-   
+
     </div>
     <div class="box-content">
-  
+  <div class="vercjj"> 
 
-<input type="text"  placeholder =" IP BackConnect" class="boxi" name="" id="ip">  
-            <a class="btn btn-romus" onclick="change_ip_backconnect(); return false;" href="#">
+<input type="text"  placeholder =" IP BackConnect" class="boxi" name="" id="ip">
+
+            <button onclick="change_ip_backconnect()" class="btnr btn-romus" href="#">
                 <i class="
 glyphicon glyphicon-floppy-disk icon-white"></i>
                 Save
-            </a>
+
+    </div>
     </div>
  <div class="pingus">
-      
-       <button class="ping" href="#">
-                <i class="glyphicon glyphicon-wrench "></i>
-               Ping
+
+ <button class="btnj btn-romus" href="#">
+               <span class="drake"> <i class="glyphicon glyphicon-wrench "></i>
+                Ping   <div class="roman"><p class="pingg"> work</p></div></span>
+                <!-- romanj class for gray color -->
             </button>
-            <div class="roman">Work</div>
-    
+
+
+    </div>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    <!--/span-->
+<div class="row">
+    <div class="box col-md-12">
+    <div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="
+glyphicon glyphicon-pencil"></i> Change password </h2>
+
+
+    </div>
+    <div class="box-content">
+        <div class="passwordss">
+  <input type="text"  placeholder ="Enter the old password" class="boxiw" name="" id="old">
+
+  <input type="text"  placeholder ="Enter the new password" class="boxiw" name="" id="new">
+         <div class="blokus">
+                
+    <div class="poslednik">
+           <div id="errore" class="erro" style="display: none;"><a class="baton"  onclick="(document.getElementById('errore').style.display='none')">x</a>
+    <p class="textus"> Wrong old password.</p>
+</div>
+</div>  
+                <button onclick="change(); return false;" class ="btns btn-romus">
+      <span >  <i class="
+glyphicon glyphicon-floppy-disk icon-white"></i>  Change password </span>
+    </button>
+
+  
+
+    </div>
+    </div>
+</div>
+
     </div>
     </tbody>
     </table>
@@ -149,12 +191,49 @@ glyphicon glyphicon-floppy-disk icon-white"></i>
     <!--/span-->
 
     </div><!--/row-->
+    </div><!--/row-->
 
     
 <style type="text/css">
     .rfjd{
 background-color: red;
     }
+    .poslednik{
+margin-left: -72.5%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+    .romanj{
+display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    padding: 1px 36.1px;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.42857143;
+
+    border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: rgb(40 40 46);
+    color: white;
+    border: 2px solid gray;
+    margin-left: -8px;
+    background-color: gray;
+    height: 14px;
+    text-decoration: none;
+        margin-top: -8px;
+}
 </style>
 
 
@@ -207,6 +286,32 @@ background-color: red;
             }
         })
     }
+
+        function change() {
+        old = document.getElementById('old').value
+        new1 = document.getElementById('new').value
+
+        console.log('subm')
+
+        $.ajax({
+            url: '/change-password/',
+            type: 'post',
+            data: {old: old, new: new1},
+            dataType: 'html',
+            success: function(data){
+                const json = data;
+                const response = JSON.parse(json);
+                if (response.v == '200') {
+                    window.location.href = '/settings/'
+                }
+
+                else{
+                    document.getElementById('errore').style.display = ''
+                }
+            }
+        })
+    }
+
 
 </script>
 

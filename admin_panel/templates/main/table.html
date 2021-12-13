@@ -116,14 +116,14 @@
     <div class="box col-md-12">
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-user"></i>Bots</h2>
+        <h2><i class="glyphicon glyphicon-user"></i>  Bots</h2>
 
    
     </div>
     <div class="box-content">
     <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
 <form onsubmit="search(this); return false">
-<input type="text" placeholder ="Search" class="boxi" name="" id="q">
+<input type="text"  placeholder ="Search" class="boxi" name="" id="q">
 </form>
     </div>
     <table id='table' class="table table-striped table-bordered bootstrap-datatable datatable responsive">
@@ -182,48 +182,54 @@
             {% endif %}
 
         </td>
-        <style type="text/css">
-            .grenocol{
-background-color:#469146;
-color: white;
-}
-        </style>
+
         <td class="center">
-            <a class="btn btn-info" href="{% url 'personal_task' %}?uid={{bot.uid}}">
+
+            {% if bot.is_banned is False %}
+            <button class="btnr btn-romus" id="task-{{bot.uid}}" onclick="document.location.href = '/personal-task/?uid={{bot.uid}}' ">
                 <i class="glyphicon glyphicon-edit icon-white"></i>
                Task
-            </a>
+            </button>
+            {% else %}
+                <button class="btnr btn-romus" id="task-{{bot.uid}}" onclick="document.location.href = '#' ">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+               Task
+            </button>
+            {% endif %}
+  
             {% if bot.is_banned is False %}
-            <a class="btn btn-danger" onclick="block_unblock(this); return false;" type="block" id={{bot.uid}} href="#">
-                <i class="glyphicon glyphicon-trash icon-white" id='i-{{bot.uid}}'></i>Block 
-            </a>
+            <button class="btnk" onclick="block_unblock(this); return false;" name="block" id={{bot.uid}} href="#">
+                <i class="glyphicon glyphicon-trash icon-white" id='i-{{bot.uid}}'></i>  Block 
+            </button>
             {% else %}
 
-            <a class="btn grenocol" onclick="block_unblock(this); return false;" type="unblock" id='{{bot.uid}}' href="#">
-                <i class="label-success label label-default" id="i-{{bot.uid}}"></i>Unblock 
-            </a>
+            <button class="btnk" onclick="block_unblock(this); return false;" name="unblock" id='{{bot.uid}}' href="#">
+                <i class="label-success label label-default" id="i-{{bot.uid}}"></i>  Unblock 
+            </button>
 
             {% endif %}
                 
-                <input type="text"  placeholder ="{{bot.comment}}" class="boxir" id="comment{{bot.uid}}" id1="search">
-                
-                <a id={{bot.uid}} onclick="add_comment(this);" class="btn btn-romus" href="#">
-                
+
+                {% if bot.comment != '' %}
+                <input type="text"  placeholder ="{{bot.comment}}" class="boxir" name="" id="comment{{bot.uid}}"> <button class="btnr btn-romus" id={{bot.uid}} onclick="add_comment(this);" href="#">
                 <i class="
 glyphicon glyphicon-send icon-white"></i>
-                comment
-            </a>
+                Comment
+            </button>
+            {% else %}
+                <input type="text"  placeholder ="Comment" class="boxir" name="" id="comment{{bot.uid}}"> <button class="btnr btn-romus" id={{bot.uid}} onclick="add_comment(this);" href="#">
+                <i class="
+glyphicon glyphicon-send icon-white"></i>
+                Comment
+            </button>
+            {% endif %}
+
+            
         </td>
     </tr>
 
     {% endfor %}
-    
-    <style type="text/css">
-        .boxi:focus{
-    border: 2px solid #4e8bf5;   
-    transition: 0.2s;
-}
-    </style>
+
 
     </tbody>
     </table>
@@ -235,13 +241,6 @@ glyphicon glyphicon-send icon-white"></i>
     </div><!--/row-->
 
     
-<style type="text/css">
-    .rfjd{
-background-color: red;
-    }
-</style>
-
-
 <script src="{% static 'table/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'table/js/jquery.cookie.js' %}"></script>
 <script src="{% static 'table/bower_components/moment/min/moment.min.js' %}"></script>
@@ -283,20 +282,48 @@ background-color: red;
 
                     if (item[6] == false) {
                         is_banned = `<span class="label-success label label-default" id='sp-${item[2]}'>Active</span>`
-                        is_banned_btn = `<a class="btn btn-danger" onclick="block_unblock(this); return false;" type="block" id=${item[2]} href="#">
-                <i class="glyphicon glyphicon-trash icon-white" id='i-${item[2]}'></i>Block 
-            </a>`
+                        is_banned_btn = `<button class="btnk" onclick="block_unblock(this); return false;" name="block" id=${item[2]} href="#">
+                <i class="glyphicon glyphicon-trash icon-white" id='i-${item[2]}'></i> Block 
+            </button>`
+                        task = `<button id="task-${item[2]}" class="btnr btn-romus" onclick="document.location.href = '/personal-task/?uid=${item[2]}' ">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+               Task
+            </button>`
                     } else {
                         is_banned = `<span class="label-default label label-danger" id='sp-${item[2]}'>Banned</span>`
-                        is_banned_btn = `<a class="btn grenocol" onclick="block_unblock(this); return false;" type="unblock" id='${item[2]}' href="#">
+                        is_banned_btn = `<button class="btnk" onclick="block_unblock(this); return false;" name="unblock" id='${item[2]}' href="#">
                 <i class="label-success label label-default" id="i-${item[2]}"></i>Unblock 
-            </a>`
+            </button>`
+                        task = `<button class="btnr btn-romus" id="task-${item[2]}" onclick="document.location.href = '#' ">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+               Task
+            </button>`
+
                     }
 
                     if (item[5] == false) {
                         is_online = `<span class="label-success label label-brous">Ofline</span>`
                     } else {
                         is_online = `<span class="label-success label label-default">Online</span>`
+                    }
+
+                    if (item[7] == ''){
+                        com = `<input type="text"  placeholder ="Comment" class="boxir" id="comment${item[2]}" id1="search">
+                
+                <button id=${item[2]} onclick="add_comment(this);" class="btnr btn-romu" href="#">
+                
+                <i class="
+glyphicon glyphicon-send icon-white"></i>
+                Comment
+            </button>`
+                    } else {
+                        com = `<input type="text"  placeholder ="${item[2]}" class="boxir" id="comment${item[2]}" id1="search">
+                
+                <button id=${item[2]} onclick="add_comment(this);" class="btnr btn-romu" href="#">
+                
+                <i class="glyphicon glyphicon-send icon-white"></i>
+                Comment
+            </button>`
                     }
 
                     tbody.innerHTML += `<tr id='tr'>
@@ -318,29 +345,14 @@ background-color: red;
             ${is_online}
 
         </td>
-        <style type="text/css">
-            .grenocol{
-background-color:#469146;
-color: white;
-}
-        </style>
+
         <td class="center">
-            <a class="btn btn-info" href="{% url 'personal_task' %}?uid=${item[2]}">
-                <i class="glyphicon glyphicon-edit icon-white"></i>
-               Task
-            </a>
+            ${task}
             
             ${is_banned_btn}
 
                 
-                <input type="text"  placeholder ="${item[7]}" class="boxir" id="comment${item[2]}" id1="search">
-                
-                <a id=${item[2]} onclick="add_comment(this);" class="btn btn-romus" href="#">
-                
-                <i class="
-glyphicon glyphicon-send icon-white"></i>
-                comment
-            </a>
+            ${com}
         </td>
     </tr> `
                 })
@@ -381,11 +393,11 @@ glyphicon glyphicon-send icon-white"></i>
     }
 
     function block_unblock(el) {
-        console.log(el.type)
+        console.log(el.name)
 
-        if (el.type == 'block') {
+        if (el.name == 'block') {
             uid = el.id;
-
+            console.log('wrk 1.0')
             $.ajax({
             url: '/ban/',
             type: 'post',
@@ -398,18 +410,18 @@ glyphicon glyphicon-send icon-white"></i>
                     el_1 = document.getElementById('i-' + uid);
                     
                     el.textContent = 'Unblock';
-                    el.className = 'btn grenocol';
                     sp = document.getElementById('sp-' + uid);
                     sp.className = 'label-default label label-danger';
                     sp.textContent = 'Banned';
-                    el.type = 'unblock';
-                }
+                    el.name = 'unblock';
+                    document.getElementById('task-' + uid).onclick = function(){document.location.href = '#'
+}                 }
             }
         })
         }
-         else {
+         else if (el.name == 'unblock'){
             uid = el.id;
-
+            console.log('wrk 2.0')
         $.ajax({
             url: '/unban/',
             type: 'post',
@@ -422,11 +434,12 @@ glyphicon glyphicon-send icon-white"></i>
                     el_1 = document.getElementById('i-' + uid);
                     
                     el.textContent = 'Block';
-                    el.className = 'btn btn-danger';
                     sp = document.getElementById('sp-' + uid);
                     sp.className = 'label-success label label-default';
                     sp.textContent = 'Active';
-                    el.type = 'block';
+                    el.name = 'block';
+                    document.getElementById('task-' + uid).onclick = function(){document.location.href = '/new-task/?uid=' + uid
+} 
                 }
             }
         })

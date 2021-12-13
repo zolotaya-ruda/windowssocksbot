@@ -116,7 +116,7 @@
     <div class="box col-md-12">
     <div class="box-inner">
     <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-time"></i>Sessions</h2>
+        <h2><i class="glyphicon glyphicon-time"></i>  Sessions</h2>
 
    
     </div>
@@ -131,8 +131,8 @@
     <tr>
         <th>UID</th>
 
-        <th> ip:port</th>
-        <th>connection type</th>
+        <th> Ip:Port</th>
+        <th>Connection type</th>
        <th>Сonnection</th>
 <th>Stop</th>
     </tr>
@@ -155,7 +155,7 @@
         
         </td>
         <td class="center">
-            <a class="btn btn-success" onclick="stop(this, {{session.type1}}); return false;" id="{{session.uid}}" href="#">
+            <a class="btns btn btn-romus" onclick="stop(this, {{session.type1}}); return false;" id="{{session.uid}}" href="#">
                 <i class="glyphicon glyphicon-remove"></i>
                Stop connection
             </a>
@@ -237,7 +237,7 @@ background-color: red;
         
         </td>
         <td class="center">
-            <a class="btn btn-success" onclick="stop(this, ${item[4]}); return false;" id="${item[0]}" href="#">
+            <a class="btns btn btn-romus" onclick="stop(this, ${item[4]}); return false;" id="${item[0]}" href="#">
                 <i class="glyphicon glyphicon-remove"></i>
                Stop connection
             </a>
@@ -268,18 +268,18 @@ background-color: red;
 
 
     function stop(argument, session_type) {
-        _id = argument.id
-        _type = session_type
-        console.log(_type)
-        var el = document.getElementById('tr-' + _id)
-        console.log('tr-' + _id)
+        id1 = argument.id
+        type1 = session_type
+        var el = document.getElementById('tr-' + id1)
         el.parentNode.removeChild(el);
+
+        console.log(type1)
 
 
         $.ajax({
             url: '/stop-conn/',
             type: 'post',
-            data: {uid:_id, type: _type},
+            data: {uid: id1, type: type1},
             dataType: 'html',
 
         })

