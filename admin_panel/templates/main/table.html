@@ -121,11 +121,11 @@
    
     </div>
     <div class="box-content">
-    <div class="alert alert-info"> <a href="http://datatables.net/" target="_blank"></a>
+
 <form onsubmit="search(this); return false">
 <input type="text"  placeholder ="Search" class="boxi" name="" id="q">
 </form>
-    </div>
+
     <table id='table' class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
     <tr>
@@ -240,6 +240,11 @@ glyphicon glyphicon-send icon-white"></i>
 
     </div><!--/row-->
 
+<style type="text/css">
+             body{
+zoom: 87%;
+             }
+         </style>
     
 <script src="{% static 'table/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'table/js/jquery.cookie.js' %}"></script>

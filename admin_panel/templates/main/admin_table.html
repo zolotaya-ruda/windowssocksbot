@@ -133,7 +133,7 @@
         <input type="text"  placeholder ="Search"  class="boxik" name="" id="q">
 
 
-        <button type="button" onclick="document.location.href = '/new-task/'" class="button-hover" >
+        <button type="button" onclick="document.location.href = '/new-task/'" class="button-hoverg" >
                 <span>Create task</span>
             </button>
 
@@ -141,6 +141,11 @@
         </div>
         </form>  
 
+<style type="text/css">
+    .boxik{
+        background: rgb(38 38 41);
+    }
+</style>
         
     
     
@@ -170,7 +175,7 @@
                <td>{{task.name}}</td>
             <td class="center">{{task.type1}}</td>
         {% if task.country != '*' %}
-        <td class="center"><img class="flag" src="/static/table/flags-mini/{{task.country|safe}}.png">  {{task.country}}, {{task.winos}} </td>
+        <td class="center"><img class="flag" src="/static/table/flags-mini/{{task.country|safe}}.png">  {{task.country}},  {{task.winos}} </td>
         {% else %}
         <td class="center"><img class="flag" src="/static/table/flags-mini/all.png">  {{task.country}}, {{task.winos}} </td>
         {% endif %}
@@ -210,6 +215,10 @@
     .rfjd{
 background-color: red;
     }
+
+    .button-hoverg span {
+    font-size: 0.8em;
+}
 </style>
 
 

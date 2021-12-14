@@ -1420,12 +1420,12 @@ background-image: linear-gradient(#242931, #242931 60%, #323826);
     /* border-radius: 5.15193px; */
     color: white;
     align-items: center;
-    background:rgb(40 40 46);
+    background:rgb(38 38 41);
     border-radius: 13px;
     border-radius: 13px;
 	margin-bottom: 10px;
     border-radius: 7px;
-    outline: none;margin-top: -8px;
+    outline: none;margin-top: 6px;
 	padding-left: 6px;
 	padding-right: 10px;
 }
@@ -1484,7 +1484,7 @@ background-image: linear-gradient(#242931, #242931 60%, #323826);
  
     width: 165px;
  
-    height: 37px;
+    height: 36px;
     border: 1.03039px solid #242931;
     box-sizing: border-box;
     /* border-radius: 5.15193px; */
@@ -1764,6 +1764,7 @@ samp {
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace
 }
 
+
 code {
 	padding: 2px 4px;
 	font-size: 90%;
@@ -1822,6 +1823,7 @@ pre code {
 	padding-right: 15px
 }
 
+
 @media (min-width:768px) {
 	.container {
 		width: 750px
@@ -1832,12 +1834,20 @@ pre code {
 	.container {
 		width: 970px
 	}
+	
+	
 }
 
-@media (min-width:1200px) {
-	.container {
-	
+
+
+
+
+@media (max-width:1054px) {
+	.containerik {
+	padding: 10px;
+  padding-right: 52px;
 	}
+
 }
 
 .container-fluid {
